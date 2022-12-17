@@ -10,10 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -45,9 +42,8 @@ public class MovieSessionServiceTests {
     MovieSessionService movieSessionService;
 
     @Test
-    void should_return_all_movie_session_when_find_all_given_movie_sessions() {
+    void should_return_all_movie_session_when_find_all_given_movie_sessions() throws Exception {
         //given
-        List<Tag> tags = new ArrayList<>();
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
         List<Tag> tags2 = Arrays.asList(new Tag(new ObjectId().toString(), ROMANTIC_TAG));
 
@@ -91,6 +87,37 @@ public class MovieSessionServiceTests {
         assertThat(returnedMoviesSessions.get(0), equalTo(movieSession1));
         assertThat(returnedMoviesSessions.get(1), equalTo(movieSession2));
         verify(movieSessionRepository).findAll();
+    }
+
+    @Test
+    void should_return_movie_session_1_when_find_by_id_given_movie_session_id() throws Exception {
+        //given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null);
+
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
+
+        List<Seat> seats1 = new ArrayList<>();
+        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
+            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
+                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(), movie1, timeslot1,
+                house1, MOVIE_1_PRICE, seats1);
+
+        when(movieSessionRepository.findById(movieSession1.getId())).thenReturn(Optional.of(movieSession1));
+        //when
+
+        MovieSession returnedMoviesSession = movieSessionService.findById(movieSession1.getId());
+
+        //then
+        assertThat(movieSession1, equalTo(returnedMoviesSession));
+        verify(movieSessionRepository).findById(movieSession1.getId());
     }
 
 

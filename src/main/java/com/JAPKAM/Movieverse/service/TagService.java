@@ -18,4 +18,8 @@ public class TagService {
     public List<Tag> findAll() {
         return tagMongoRepository.findAll();
     }
+
+    public Tag findById(String id) {
+        return tagMongoRepository.findById(id).get();
+    }
 }

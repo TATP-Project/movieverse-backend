@@ -55,4 +55,21 @@ public class TagServiceTests {
         assertThat(tags.get(2).getId(), equalTo(tag3.getId()));
         assertThat(tags.get(2).getName(), equalTo(tag3.getName()));
     }
+
+    @Test
+    void should_return_tag_3_when_find_by_id_given_id() {
+        //given
+        Tag tag1 = new Tag(new ObjectId().toString(), SUPERHERO_TAG);
+        Tag tag2 = new Tag(new ObjectId().toString(), MARVEL_TAG);
+        Tag tag3 = new Tag(new ObjectId().toString(), MARVEL_TAG);
+        tagMongoRepository.saveAll(Arrays.asList(tag1, tag2, tag3));
+
+        //when
+        Tag returnedTag = tagService.findById(tag3.getId());
+
+        //then
+
+        assertThat(returnedTag.getId(), equalTo(tag3.getId()));
+        assertThat(returnedTag.getName(), equalTo(tag3.getName()));
+    }
 }

@@ -1,10 +1,9 @@
 package com.JAPKAM.Movieverse;
 
 import com.JAPKAM.Movieverse.entity.Timeslot;
-import com.JAPKAM.Movieverse.repository.TimeslotMongoRepository;
+import com.JAPKAM.Movieverse.repository.TimeslotRepository;
 import com.JAPKAM.Movieverse.service.TimeslotService;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class TimeslotServiceTests {
 
     @Mock
-    TimeslotMongoRepository timeslotMongoRepository;
+    TimeslotRepository timeslotRepository;
 
     @InjectMocks
     TimeslotService timeslotService;
@@ -46,7 +45,7 @@ public class TimeslotServiceTests {
         Timeslot timeslot4 = new Timeslot(new ObjectId().toString(), TIMESLOT_FOUR);
 
         List<Timeslot> timeslots = Arrays.asList(timeslot1, timeslot2, timeslot3, timeslot4);
-        when(timeslotMongoRepository.findAll()).thenReturn(timeslots);
+        when(timeslotRepository.findAll()).thenReturn(timeslots);
         //when
 
         List<Timeslot> returnedTimeslots = timeslotService.findAll();
@@ -56,7 +55,7 @@ public class TimeslotServiceTests {
         assertThat(returnedTimeslots.get(1), equalTo(timeslot2));
         assertThat(returnedTimeslots.get(2), equalTo(timeslot3));
         assertThat(returnedTimeslots.get(3), equalTo(timeslot4));
-        verify(timeslotMongoRepository).findAll();
+        verify(timeslotRepository).findAll();
 
     }
 
@@ -66,13 +65,13 @@ public class TimeslotServiceTests {
 
         Timeslot timeslot3 = new Timeslot(new ObjectId().toString(), TIMESLOT_THREE);
 
-        when(timeslotMongoRepository.findById(timeslot3.getId())).thenReturn(Optional.of(timeslot3));
+        when(timeslotRepository.findById(timeslot3.getId())).thenReturn(Optional.of(timeslot3));
         //when
 
         Timeslot returnedTimeslot = timeslotService.findById(timeslot3.getId());
         //then
 
         assertThat(returnedTimeslot,equalTo(timeslot3));
-        verify(timeslotMongoRepository).findById(timeslot3.getId());
+        verify(timeslotRepository).findById(timeslot3.getId());
     }
 }

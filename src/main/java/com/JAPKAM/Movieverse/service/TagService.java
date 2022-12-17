@@ -1,6 +1,7 @@
 package com.JAPKAM.Movieverse.service;
 
 import com.JAPKAM.Movieverse.entity.Tag;
+import com.JAPKAM.Movieverse.exception.TagNotFoundException;
 import com.JAPKAM.Movieverse.repository.TagMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,6 @@ public class TagService {
     }
 
     public Tag findById(String id) {
-        return tagMongoRepository.findById(id).get();
+        return tagMongoRepository.findById(id).orElseThrow(TagNotFoundException::new);
     }
 }

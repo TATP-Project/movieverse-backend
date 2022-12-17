@@ -6,12 +6,8 @@ import com.JAPKAM.Movieverse.service.HouseService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
@@ -66,5 +62,23 @@ public class HouseServiceTests {
         assertThat(houses.get(1).getName(), equalTo(expectedHouses.get(1).getName()));
         assertThat(houses.get(1).getNumberOfColumn(), equalTo(expectedHouses.get(1).getNumberOfColumn()));
         assertThat(houses.get(1).getNumberOfRow(), equalTo(expectedHouses.get(1).getNumberOfRow()));
+    }
+
+    @Test
+    void should_return_house_2_when_find_by_id_given_house_id() {
+        //given
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
+        House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
+        houseMongoRepository.save(house1);
+        houseMongoRepository.save(house2);
+
+        //when
+        House returnedHouse = houseService.findById(house2.getId());
+
+        //then
+        assertThat(returnedHouse.getId(), equalTo(house2.getId()));
+        assertThat(returnedHouse.getName(), equalTo(house2.getName()));
+        assertThat(returnedHouse.getNumberOfRow(), equalTo(house2.getNumberOfRow()));
+        assertThat(returnedHouse.getNumberOfColumn(), equalTo(house2.getNumberOfColumn()));
     }
 }

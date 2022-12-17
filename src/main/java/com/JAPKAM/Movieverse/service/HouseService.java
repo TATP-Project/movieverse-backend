@@ -18,4 +18,8 @@ public class HouseService {
     public List<House> findAll() {
         return houseMongoRepository.findAll();
     }
+
+    public House findById(String id) {
+        return houseMongoRepository.findById(id).get();
+    }
 }

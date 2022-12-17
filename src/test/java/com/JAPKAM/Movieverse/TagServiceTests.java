@@ -1,10 +1,9 @@
 package com.JAPKAM.Movieverse;
 
 import com.JAPKAM.Movieverse.entity.Tag;
-import com.JAPKAM.Movieverse.repository.TagMongoRepository;
+import com.JAPKAM.Movieverse.repository.TagRepository;
 import com.JAPKAM.Movieverse.service.TagService;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class TagServiceTests {
 
     @Mock
-    TagMongoRepository tagMongoRepository;
+    TagRepository tagRepository;
 
     @InjectMocks
     TagService tagService;
@@ -42,7 +41,7 @@ public class TagServiceTests {
         Tag tag3 = new Tag(new ObjectId().toString(), MARVEL_TAG);
         List<Tag> tags = Arrays.asList(tag1, tag2, tag3);
 
-        when(tagMongoRepository.findAll()).thenReturn(tags);
+        when(tagRepository.findAll()).thenReturn(tags);
 
         //when
         List<Tag> returnedTags = tagService.findAll();
@@ -53,7 +52,7 @@ public class TagServiceTests {
         assertThat(returnedTags.get(0), equalTo(tag1));
         assertThat(returnedTags.get(1), equalTo(tag2));
         assertThat(returnedTags.get(2), equalTo(tag3));
-        verify(tagMongoRepository).findAll();
+        verify(tagRepository).findAll();
     }
 
     @Test
@@ -64,13 +63,13 @@ public class TagServiceTests {
         Tag tag3 = new Tag(new ObjectId().toString(), MARVEL_TAG);
         List<Tag> tags = Arrays.asList(tag1, tag2, tag3);
 
-        when(tagMongoRepository.findById(tag3.getId())).thenReturn(Optional.of(tag3));
+        when(tagRepository.findById(tag3.getId())).thenReturn(Optional.of(tag3));
         //when
         Tag returnedTag = tagService.findById(tag3.getId());
 
         //then
 
         assertThat(returnedTag, equalTo(tag3));
-        verify(tagMongoRepository).findById(tag3.getId());
+        verify(tagRepository).findById(tag3.getId());
     }
 }

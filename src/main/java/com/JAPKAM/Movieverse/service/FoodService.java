@@ -1,6 +1,7 @@
 package com.JAPKAM.Movieverse.service;
 
 import com.JAPKAM.Movieverse.entity.Food;
+import com.JAPKAM.Movieverse.exception.FoodNotFoundException;
 import com.JAPKAM.Movieverse.repository.FoodRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,6 @@ public class FoodService {
     }
 
     public Food findById(String id) {
-        return foodRepository.findById(id).get();
+        return foodRepository.findById(id).orElseThrow(FoodNotFoundException::new);
     }
 }

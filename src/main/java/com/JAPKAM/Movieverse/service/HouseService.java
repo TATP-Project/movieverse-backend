@@ -1,6 +1,7 @@
 package com.JAPKAM.Movieverse.service;
 
 import com.JAPKAM.Movieverse.entity.House;
+import com.JAPKAM.Movieverse.exception.HouseNotFoundException;
 import com.JAPKAM.Movieverse.repository.HouseMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,6 @@ public class HouseService {
     }
 
     public House findById(String id) {
-        return houseMongoRepository.findById(id).get();
+        return houseMongoRepository.findById(id).orElseThrow(HouseNotFoundException::new);
     }
 }

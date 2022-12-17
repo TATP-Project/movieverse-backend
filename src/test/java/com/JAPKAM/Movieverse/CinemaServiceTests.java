@@ -10,10 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -96,5 +93,39 @@ public class CinemaServiceTests {
         assertThat(returnedCinemas.get(0), equalTo(cinema1));
         assertThat(returnedCinemas.get(1),equalTo(cinema2));
         verify(cinemaRepository).findAll();
+    }
+
+    @Test
+    void should_return_cinema_1_when_find_by_id_given_id() {
+        //given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null);
+
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
+
+        List<Seat> seats1 = new ArrayList<>();
+        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
+            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
+                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(), movie1, timeslot1,
+                house1, MOVIE_1_PRICE, seats1);
+
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
+                Arrays.asList(movieSession1));
+
+        when(cinemaRepository.findById(cinema1.getId())).thenReturn(Optional.of(cinema1));
+        //when
+
+        Cinema returnedCinema = cinemaService.findById(cinema1.getId());
+
+        //then
+        assertThat(returnedCinema, equalTo(cinema1));
+        verify(cinemaRepository).findById(cinema1.getId());
     }
 }

@@ -1,5 +1,5 @@
 package com.JAPKAM.Movieverse.entity;
 
-enum SeatStatus {
+public enum SeatStatus {
     AVAILABLE, RESERVED, SOLD
 }

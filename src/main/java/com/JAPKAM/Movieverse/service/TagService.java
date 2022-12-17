@@ -2,7 +2,7 @@ package com.JAPKAM.Movieverse.service;
 
 import com.JAPKAM.Movieverse.entity.Tag;
 import com.JAPKAM.Movieverse.exception.TagNotFoundException;
-import com.JAPKAM.Movieverse.repository.TagMongoRepository;
+import com.JAPKAM.Movieverse.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,17 +10,17 @@ import java.util.List;
 @Service
 public class TagService {
 
-    TagMongoRepository tagMongoRepository;
+    private TagRepository tagRepository;
 
-    public TagService(TagMongoRepository tagMongoRepository) {
-        this.tagMongoRepository = tagMongoRepository;
+    public TagService(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
     }
 
     public List<Tag> findAll() {
-        return tagMongoRepository.findAll();
+        return tagRepository.findAll();
     }
 
     public Tag findById(String id) {
-        return tagMongoRepository.findById(id).orElseThrow(TagNotFoundException::new);
+        return tagRepository.findById(id).orElseThrow(TagNotFoundException::new);
     }
 }

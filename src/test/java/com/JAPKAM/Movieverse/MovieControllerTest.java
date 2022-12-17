@@ -59,4 +59,21 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Movie 1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Movie 2"));
     }
+
+    @Test
+    void should_get_movie_when_perform_get_by_id_given_a_id() throws Exception {
+        //given
+        List<Tag> tags = new ArrayList<>();
+        Tag tag = new Tag(new ObjectId().toString(),"action");
+        tags.add(tag);
+        Binary image = new Binary(new byte[1]);
+        String id = new ObjectId().toString();
+        Movie movie = new Movie(id,"Movie 1", tags,image);
+        movieRepository.save(movie);
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movies/{id}",movie.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Movie 1"));
+    }
 }

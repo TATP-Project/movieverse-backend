@@ -14,9 +14,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,5 +54,22 @@ public class MovieServiceTest {
         assertThat(result.get(0), equalTo(movie1));
         assertThat(result.get(1), equalTo(movie2));
         verify(movieRepository).findAll();
+    }
+
+    @Test
+    void should_return_movie_when_find_by_id_given_movie() {
+        //given
+        List<Tag> tags = new ArrayList<>();
+        Tag tag = new Tag(new ObjectId().toString(),"action");
+        tags.add(tag);
+        Binary image = new Binary(new byte[1]);
+        String id = new ObjectId().toString();
+        Movie movie = new Movie(id,"Movie 1", tags,image);
+        given(movieRepository.findById(id)).willReturn(Optional.of(movie));
+        //when
+        Movie result = movieService.findById(id);
+        //then
+        verify(movieRepository).findById(id);
+        assertThat(result,equalTo(movie));
     }
 }

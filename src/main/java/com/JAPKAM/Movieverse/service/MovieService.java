@@ -16,4 +16,8 @@ public class MovieService {
     public List<Movie> findAll() {
         return movieRepository.findAll();
     }
+
+    public Movie findById(String id) {
+        return movieRepository.findById(id).get();
+    }
 }

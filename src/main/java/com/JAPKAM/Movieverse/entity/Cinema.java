@@ -1,18 +1,32 @@
 package com.JAPKAM.Movieverse.entity;
 
+import org.springframework.data.mongodb.core.mapping.*;
+
 import java.util.List;
 
+@Document
 public class Cinema {
+
+    @MongoId(FieldType.OBJECT_ID)
     private String id;
 
     private String name;
 
+    @DBRef
     private List<House> houses;
 
+    @DBRef
     private List<MovieSession> movieSessions;
 
     public String getId() {
         return id;
+    }
+
+    public Cinema(String id, String name, List<House> houses, List<MovieSession> movieSessions) {
+        this.id = id;
+        this.name = name;
+        this.houses = houses;
+        this.movieSessions = movieSessions;
     }
 
     public void setId(String id) {

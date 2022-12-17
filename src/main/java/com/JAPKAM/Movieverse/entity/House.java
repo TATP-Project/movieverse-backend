@@ -1,6 +1,12 @@
 package com.JAPKAM.Movieverse.entity;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
+@Document
 public class House {
+    @MongoId(FieldType.OBJECT_ID)
     private String id;
 
     private String name;
@@ -8,6 +14,13 @@ public class House {
     private Integer numberOfRow;
 
     private Integer numberOfColumn;
+
+    public House(String id, String name, Integer numberOfRow, Integer numberOfColumn) {
+        this.id = id;
+        this.name = name;
+        this.numberOfRow = numberOfRow;
+        this.numberOfColumn = numberOfColumn;
+    }
 
     public String getId() {
         return id;

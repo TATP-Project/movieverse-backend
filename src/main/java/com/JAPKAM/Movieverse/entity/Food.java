@@ -1,8 +1,13 @@
 package com.JAPKAM.Movieverse.entity;
 
 import org.bson.types.Binary;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
+@Document
 public class Food {
+    @MongoId(FieldType.OBJECT_ID)
     private String id;
 
     private String name;
@@ -10,6 +15,13 @@ public class Food {
     private Double price;
 
     private Binary image;
+
+    public Food(String id, String name, Double price, Binary image) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.image = image;
+    }
 
     public String getId() {
         return id;

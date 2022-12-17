@@ -40,9 +40,9 @@ public class TimeslotServiceTests {
     void should_return_all_timeslots_when_findAll_given_timeslots() throws Exception {
         //given
         Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-        Timeslot timeslot3 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-        Timeslot timeslot4 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
+        Timeslot timeslot3 = new Timeslot(new ObjectId().toString(), TIMESLOT_THREE);
+        Timeslot timeslot4 = new Timeslot(new ObjectId().toString(), TIMESLOT_FOUR);
         timeslotMongoRepository.saveAll(Arrays.asList(timeslot1, timeslot2, timeslot3, timeslot4));
         //when
 
@@ -58,5 +58,22 @@ public class TimeslotServiceTests {
         assertThat(timeslots.get(3).getId(), equalTo(timeslot4.getId()));
         assertThat(timeslots.get(3).getStartDateTime(), equalTo(timeslot4.getStartDateTime()));
 
+    }
+
+    @Test
+    void should_return_timeslot_3_when_find_by_id_given_id() throws Exception {
+        //given
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
+        Timeslot timeslot3 = new Timeslot(new ObjectId().toString(), TIMESLOT_THREE);
+        Timeslot timeslot4 = new Timeslot(new ObjectId().toString(), TIMESLOT_FOUR);
+        timeslotMongoRepository.saveAll(Arrays.asList(timeslot1, timeslot2, timeslot3, timeslot4));
+        //when
+
+        Timeslot returnedTimeslot = timeslotService.findById(timeslot3.getId());
+        //then
+
+        assertThat(returnedTimeslot.getId(), equalTo(timeslot3.getId()));
+        assertThat(returnedTimeslot.getStartDateTime(), equalTo(timeslot3.getStartDateTime()));
     }
 }

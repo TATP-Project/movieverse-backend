@@ -18,4 +18,8 @@ public class TimeslotService {
     public List<Timeslot> findAll() {
         return  timeslotMongoRepository.findAll();
     }
+
+    public Timeslot findById(String id) {
+        return timeslotMongoRepository.findById(id).get();
+    }
 }

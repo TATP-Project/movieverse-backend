@@ -52,10 +52,13 @@ public class CinemaServiceTests {
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
         House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
 
+        String district1 = DistrictName.KOWLOON.toString();
+        String district2 = DistrictName.HONG_KONG.toString();
+
         Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movie1));
+                Arrays.asList(movie1),district1);
         Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),
-                Arrays.asList(movie2));
+                Arrays.asList(movie2),district2);
 
         when(cinemaRepository.findAll()).thenReturn(Arrays.asList(cinema1, cinema2));
         //when
@@ -77,10 +80,10 @@ public class CinemaServiceTests {
 
 
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
-
+        String district1 = DistrictName.KOWLOON.toString();
 
         Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movie1));
+                Arrays.asList(movie1),district1);
 
         when(cinemaRepository.findById(cinema1.getId())).thenReturn(Optional.of(cinema1));
         //when

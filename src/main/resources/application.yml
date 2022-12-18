@@ -1,0 +1,5 @@
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://tatp:tatp2022@cluster0.bokkijx.mongodb.net/test

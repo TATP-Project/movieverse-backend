@@ -1,6 +1,7 @@
 package com.JAPKAM.Movieverse.service;
 
 import com.JAPKAM.Movieverse.entity.Cinema;
+import com.JAPKAM.Movieverse.entity.Movie;
 import com.JAPKAM.Movieverse.exception.CinemaNotFoundException;
 import com.JAPKAM.Movieverse.repository.CinemaRepository;
 import org.springframework.stereotype.Service;
@@ -23,4 +24,8 @@ public class CinemaService {
     public Cinema findById(String id) {
         return  cinemaRepository.findById(id).orElseThrow(CinemaNotFoundException::new);
     }
+
+//    public List<Movie> findAllMovies(String id) {
+//        return findById(id).getMovies();
+//    }
 }

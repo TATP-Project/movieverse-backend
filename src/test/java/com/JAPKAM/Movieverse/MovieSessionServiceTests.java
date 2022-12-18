@@ -120,6 +120,28 @@ public class MovieSessionServiceTests {
         verify(movieSessionRepository).findById(movieSession1.getId());
     }
 
+    @Test
+    void should_return_all_seats_when_get_seats_given_movie_session_id() throws Exception {
+        //given
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+        seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        MovieSession movieSession1 = new MovieSession(id, null, null,
+                house1, MOVIE_1_PRICE, seats1);
+
+        when(movieSessionRepository.findById(id)).thenReturn(Optional.of(movieSession1));
+        //when
+
+        List<Seat> returnedSeats = movieSessionService.findById(id).getSeats();
+
+        //then
+        assertThat(seats1, equalTo(returnedSeats));
+        verify(movieSessionRepository).findById(movieSession1.getId());
+    }
+
 
 
 }

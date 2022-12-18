@@ -2,6 +2,7 @@ package com.JAPKAM.Movieverse;
 
 import com.JAPKAM.Movieverse.entity.*;
 import com.JAPKAM.Movieverse.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
@@ -183,6 +185,29 @@ public class MovieSessionControllerTests {
         // then
         client.perform(MockMvcRequestBuilders.get("/moviesessions/{id}", new ObjectId().toString()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+    @Test
+    void should_return_list_of_seats_when_perform_get_given_movie_session() throws Exception {
+        // given
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+                seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        MovieSession movieSession1 = new MovieSession(id, null, null,
+                house1, MOVIE_1_PRICE, seats1);
+        movieSessionRepository.save(movieSession1);
+        // when
+        client.perform(MockMvcRequestBuilders.get("/moviesessions/{id}/seats", id))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].row").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].column").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].status").value("AVAILABLE"));
+        // then
+
+
     }
     
     

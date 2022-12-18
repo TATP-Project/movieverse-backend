@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -19,8 +20,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -209,6 +210,28 @@ public class MovieSessionControllerTests {
 
 
     }
-    
+    @Test
+    void should_update_seat_when_perform_put_given_movie_session() throws Exception {
+        // given
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+        String seatId = new ObjectId().toString();
+        seats1.add(new Seat(seatId, 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        MovieSession movieSession1 = new MovieSession(id, null, null,
+                house1, MOVIE_1_PRICE, seats1);
+        movieSessionRepository.save(movieSession1);
+        Seat newSeat = new Seat(seatId, 2, 2, SeatStatus.RESERVED);
+        String newSeatJson = new ObjectMapper().writeValueAsString(newSeat);
+        // when & then
+        client.perform(MockMvcRequestBuilders.put("/moviesessions/{id}/seats", id).contentType(MediaType.APPLICATION_JSON).content(newSeatJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.row").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.column").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("RESERVED"));
+
+    }
     
 }

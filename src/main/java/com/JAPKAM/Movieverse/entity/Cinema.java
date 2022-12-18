@@ -18,6 +18,8 @@ public class Cinema {
     @DBRef
     private List<MovieSession> movieSessions;
 
+    private DistrictName district;
+
     public String getId() {
         return id;
     }
@@ -55,5 +57,13 @@ public class Cinema {
 
     public void setMovieSessions(List<MovieSession> movieSessions) {
         this.movieSessions = movieSessions;
+    }
+
+    public DistrictName getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(DistrictName district) {
+        this.district = district;
     }
 }

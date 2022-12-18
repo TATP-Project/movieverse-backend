@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/moviesessions")
 public class MovieSessionController {
 
     private MovieSessionService movieSessionService;
@@ -20,12 +20,12 @@ public class MovieSessionController {
         this.movieSessionService = movieSessionService;
     }
 
-    @GetMapping("/moviesessions")
+    @GetMapping
     public List<MovieSession> findAllMovieSessions() {
         return movieSessionService.findAll();
     }
 
-    @GetMapping("/moviesessions/{id}")
+    @GetMapping("/{id}")
     public MovieSession getMovieById(@PathVariable String id) {
         return movieSessionService.findById(id);
     }

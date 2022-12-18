@@ -124,13 +124,14 @@ public class MovieSessionServiceTests {
     @Test
     void should_return_all_seats_when_get_seats_given_movie_session_id() throws Exception {
         //given
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
 
         List<Seat> seats1 = new ArrayList<>();
         seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
 
         String id = new ObjectId().toString();
-        MovieSession movieSession1 = new MovieSession(id, null, null,
+        MovieSession movieSession1 = new MovieSession(id, timeslot1,
                 house1, MOVIE_1_PRICE, seats1);
 
         when(movieSessionRepository.findById(id)).thenReturn(Optional.of(movieSession1));
@@ -145,6 +146,7 @@ public class MovieSessionServiceTests {
     @Test
     void should_update_seat_status_when_update_given_movie_session() throws Exception {
         // given
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
 
         List<Seat> seats1 = new ArrayList<>();
@@ -152,7 +154,7 @@ public class MovieSessionServiceTests {
         seats1.add(new Seat(seatId, 1, 1, SeatStatus.AVAILABLE));
 
         String id = new ObjectId().toString();
-        MovieSession movieSession1 = new MovieSession(id, null, null,
+        MovieSession movieSession1 = new MovieSession(id, timeslot1,
                 house1, MOVIE_1_PRICE, seats1);
         movieSessionRepository.save(movieSession1);
         Seat newSeat = new Seat(seatId, 2, 2, SeatStatus.RESERVED);

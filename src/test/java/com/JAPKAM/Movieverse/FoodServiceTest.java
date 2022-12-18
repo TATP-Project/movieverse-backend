@@ -14,11 +14,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class FoodServiceTest {
@@ -44,6 +46,21 @@ public class FoodServiceTest {
         assertThat(actualFood, hasSize(2));
         assertThat(actualFood.get(0), equalTo(food1));
         assertThat(actualFood.get(1), equalTo(food2));
+    }
+
+    @Test
+    void should_return_food_when_find_by_id_given_food() {
+        //given
+        String id = new ObjectId().toString();
+        Binary image = new Binary(new byte[1]);
+        Food food = new Food(id,"food 1",10.0,image);
+        given(foodRepository.findById(id)).willReturn(Optional.of(food));
+        //when
+        Food result = foodService.findById(id);
+        //then
+        verify(foodRepository).findById(id);
+        assertThat(result, equalTo(food));
+
     }
 
 }

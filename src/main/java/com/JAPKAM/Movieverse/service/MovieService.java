@@ -1,6 +1,7 @@
 package com.JAPKAM.Movieverse.service;
 
 import com.JAPKAM.Movieverse.entity.Movie;
+import com.JAPKAM.Movieverse.entity.MovieSession;
 import com.JAPKAM.Movieverse.exception.MovieNotFoundException;
 import com.JAPKAM.Movieverse.repository.MovieRepository;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,9 @@ public class MovieService {
 
     public Movie findById(String id) {
         return movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
+    }
+
+    public  List<MovieSession> findAllMovieSession(String id) {
+        return findById(id).getMovieSessions();
     }
 }

@@ -1,6 +1,7 @@
 package com.JAPKAM.Movieverse.controller;
 
 import com.JAPKAM.Movieverse.entity.Movie;
+import com.JAPKAM.Movieverse.entity.MovieSession;
 import com.JAPKAM.Movieverse.service.MovieService;
 import com.mongodb.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,5 +29,10 @@ public class MovieController {
     public Movie getById(@NonNull @PathVariable String id){
         Movie findMovie = movieService.findById(id);
         return movieService.findById(id);
+    }
+
+    @GetMapping("/{id}/moviessessions")
+    public List<MovieSession> findAllMovieSessionByMovie(@NonNull @PathVariable String id) {
+        return movieService.findAllMovieSession(id);
     }
 }

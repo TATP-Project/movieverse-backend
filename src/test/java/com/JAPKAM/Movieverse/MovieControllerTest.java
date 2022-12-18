@@ -1,6 +1,7 @@
 package com.JAPKAM.Movieverse;
 
 import com.JAPKAM.Movieverse.entity.*;
+import com.JAPKAM.Movieverse.exception.MovieNotFoundException;
 import com.JAPKAM.Movieverse.repository.MovieRepository;
 import org.bson.types.Binary;
 import org.bson.types.ObjectId;
@@ -19,6 +20,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
@@ -124,5 +127,16 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(MOVIE_1_NAME));
+    }
+
+    @Test
+    void should_return_movie_not_found_exception_when_get_by_id_given_id_not_exist() throws Exception {
+        //given
+        //when
+        //then
+        client.perform(MockMvcRequestBuilders.get("/movies/{id}", new ObjectId().toString()))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MovieNotFoundException))
+                .andExpect(result -> assertEquals("Movie Not Found", result.getResolvedException().getMessage()));
     }
 }

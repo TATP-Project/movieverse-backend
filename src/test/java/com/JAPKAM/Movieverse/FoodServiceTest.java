@@ -24,6 +24,10 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class FoodServiceTest {
+    public static final String FOOD_1 = "food 1";
+    public static final double PRICE1 = 10.0;
+    public static final String FOOD_2 = "food 2";
+    public static final double PRICE2 = 20.5;
     @Mock
     FoodRepository foodRepository;
 
@@ -35,8 +39,8 @@ public class FoodServiceTest {
         //given
         Binary image1 = new Binary(new byte[1]);
         Binary image2 = new Binary(new byte[1]);
-        Food food1 = new Food(new ObjectId().toString(),"food 1",10.0,image1);
-        Food food2 = new Food(new ObjectId().toString(),"food 2",20.5,image2);
+        Food food1 = new Food(new ObjectId().toString(), FOOD_1, PRICE1,image1);
+        Food food2 = new Food(new ObjectId().toString(), FOOD_2, PRICE2,image2);
         List<Food> foods = new ArrayList<>(Arrays.asList(food1, food2));
         given(foodRepository.findAll()).willReturn(foods);
 
@@ -53,7 +57,7 @@ public class FoodServiceTest {
         //given
         String id = new ObjectId().toString();
         Binary image = new Binary(new byte[1]);
-        Food food = new Food(id,"food 1",10.0,image);
+        Food food = new Food(id, FOOD_1, PRICE1,image);
         given(foodRepository.findById(id)).willReturn(Optional.of(food));
         //when
         Food result = foodService.findById(id);

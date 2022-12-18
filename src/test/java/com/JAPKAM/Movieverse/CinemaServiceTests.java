@@ -33,16 +33,12 @@ public class CinemaServiceTests {
     public static final String ROMANTIC_TAG = "romantic";
     public static final String MOVIE_1_NAME = "Movie 1";
     public static final String MOVIE_2_NAME = "Movie 2";
-    public static final Date TIMESLOT_ONE = new Date(2022,12,16,16,30);
-    public static final Date TIMESLOT_TWO = new Date(2022,12,17,17,30);
     public static final String HOUSE_ONE = "HOUSE ONE";
     public static final int HOUSE_ONE_ROW_NUMBER = 20;
     public static final int HOUSE_ONE_COL_NUMBER = 20;
     public static final String HOUSE_TWO = "HOUSE TWO";
     public static final int HOUSE_TWO_ROW_NUMBER = 5;
     public static final int HOUSE_TWO_COL_NUMBER = 10;
-    public static final double MOVIE_1_PRICE = 80;
-    public static final double MOVIE_2_PRICE = 90;
 
     @Test
     void should_return_all_cinema_when_find_all_given_cinemas() {
@@ -53,39 +49,16 @@ public class CinemaServiceTests {
         Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null);
         Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null);
 
-        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
-
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
         House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
 
-        List<Seat> seats1 = new ArrayList<>();
-        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
-            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
-                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-
-        List<Seat> seats2 = new ArrayList<>();
-        for(int i = 0 ; i < house2.getNumberOfRow(); i++){
-            for(int j =0 ;j <house2.getNumberOfColumn(); j++) {
-                seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(), movie1, timeslot1,
-                house1, MOVIE_1_PRICE, seats1);
-        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), movie2, timeslot2,
-                house2, MOVIE_2_PRICE, seats2);
-
         Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movieSession1));
+                Arrays.asList(movie1));
         Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),
-                Arrays.asList(movieSession2));
+                Arrays.asList(movie2));
 
         when(cinemaRepository.findAll()).thenReturn(Arrays.asList(cinema1, cinema2));
         //when
-
         List<Cinema> returnedCinemas = cinemaService.findAll();
 
         //then
@@ -102,22 +75,12 @@ public class CinemaServiceTests {
 
         Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null);
 
-        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
 
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
 
-        List<Seat> seats1 = new ArrayList<>();
-        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
-            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
-                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(), movie1, timeslot1,
-                house1, MOVIE_1_PRICE, seats1);
 
         Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movieSession1));
+                Arrays.asList(movie1));
 
         when(cinemaRepository.findById(cinema1.getId())).thenReturn(Optional.of(cinema1));
         //when

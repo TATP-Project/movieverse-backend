@@ -10,10 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -31,10 +28,12 @@ public class TimeslotServiceTests {
     @InjectMocks
     TimeslotService timeslotService;
 
-    public static final Date TIMESLOT_ONE = new Date(2022,12,16,16,30);
-    public static final Date TIMESLOT_TWO = new Date(2022,12,17,17,30);
-    public static final Date TIMESLOT_THREE = new Date(2022,12,18,18,30);
-    public static final Date TIMESLOT_FOUR = new Date(2022,12,19,19,30);
+
+    public static final GregorianCalendar TIMESLOT_ONE = new GregorianCalendar(2022+1900, 12, 16, 14, 30);
+    public static final GregorianCalendar TIMESLOT_TWO = new GregorianCalendar(2022+1900,12,17,17,30);
+    public static final GregorianCalendar TIMESLOT_THREE = new GregorianCalendar(2022+1900,12,18,18,30);
+    public static final GregorianCalendar TIMESLOT_FOUR = new GregorianCalendar(2022+1900,12,19,19,30);
+
 
     @Test
     void should_return_all_timeslots_when_findAll_given_timeslots() throws Exception {

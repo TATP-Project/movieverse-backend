@@ -1,33 +1,43 @@
 package com.JAPKAM.Movieverse;
 
 import com.JAPKAM.Movieverse.entity.*;
+import com.JAPKAM.Movieverse.exception.MovieNotFoundException;
 import com.JAPKAM.Movieverse.repository.MovieRepository;
-import com.JAPKAM.Movieverse.service.MovieService;
 import org.bson.types.Binary;
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import java.io.IOException;
-import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@ExtendWith(SpringExtension.class)
-public class MovieServiceTest {
-    @Mock
+@SpringBootTest
+@AutoConfigureMockMvc
+public class MovieControllerTest {
+
+    @Autowired
+    MockMvc client;
+
+    @Autowired
     MovieRepository movieRepository;
 
-    @InjectMocks
-    MovieService movieService;
-
+    @BeforeEach
+    public void clearDB() {
+        movieRepository.deleteAll();
+    }
     public static final String ACTION_TAG = "action";
     public static final String ROMANTIC_TAG = "romantic";
     public static final String MOVIE_1_NAME = "Movie 1";
@@ -47,7 +57,7 @@ public class MovieServiceTest {
     public static final int RUNNING_TIME1 = 120;
     public static final int RUNNING_TIME2 = 100;
     @Test
-    void should_return_all_movie_when_find_all_given_movies() throws IOException {
+    void should_get_all_movies_when_perform_get_given_2_movies() throws Exception {
         //given
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
         List<Tag> tags2 = Arrays.asList(new Tag(new ObjectId().toString(), ROMANTIC_TAG));
@@ -74,21 +84,23 @@ public class MovieServiceTest {
                 house2, MOVIE_2_PRICE, seats2);
         Binary image1 = new Binary(new byte[1]);
         Binary image2 = new Binary(new byte[1]);
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,image1,Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,image1, Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1, Language.ENGLISH,Language.CHINESE);
         Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,image2,Arrays.asList(movieSession2), RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
+        movieRepository.save(movie1);
+        movieRepository.save(movie2);
+        //when & then
 
-        when(movieRepository.findAll()).thenReturn(Arrays.asList(movie1,movie2));
-        //when
-        List<Movie> result = movieService.findAll();
-        //then
-        assertThat(result,hasSize(2));
-        assertThat(result.get(0), equalTo(movie1));
-        assertThat(result.get(1), equalTo(movie2));
-        verify(movieRepository).findAll();
+        client.perform(MockMvcRequestBuilders.get("/movies"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(2)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(MOVIE_1_NAME))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(MOVIE_2_NAME));
     }
 
     @Test
-    void should_return_movie_when_find_by_id_given_movie() {
+    void should_get_movie_when_perform_get_by_id_given_a_id() throws Exception {
         //given
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
 
@@ -107,12 +119,24 @@ public class MovieServiceTest {
         MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
         Binary image1 = new Binary(new byte[1]);
         String id = new ObjectId().toString();
-        Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,image1,Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
-        given(movieRepository.findById(id)).willReturn(Optional.of(movie1));
+        Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,image1,Arrays.asList(movieSession1), RELEASE_DATE1,
+                RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        movieRepository.save(movie1);
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movies/{id}",movie1.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(MOVIE_1_NAME));
+    }
+
+    @Test
+    void should_return_movie_not_found_exception_when_get_by_id_given_id_not_exist() throws Exception {
+        //given
         //when
-        Movie result = movieService.findById(id);
         //then
-        verify(movieRepository).findById(id);
-        assertThat(result,equalTo(movie1));
+        client.perform(MockMvcRequestBuilders.get("/movies/{id}", new ObjectId().toString()))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MovieNotFoundException))
+                .andExpect(result -> assertEquals("Movie Not Found", result.getResolvedException().getMessage()));
     }
 }

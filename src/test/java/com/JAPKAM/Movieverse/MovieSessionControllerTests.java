@@ -1,6 +1,8 @@
 package com.JAPKAM.Movieverse;
 
 import com.JAPKAM.Movieverse.entity.*;
+import com.JAPKAM.Movieverse.exception.MovieNotFoundException;
+import com.JAPKAM.Movieverse.exception.MovieSessionNotFoundException;
 import com.JAPKAM.Movieverse.repository.*;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,13 +14,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -49,8 +50,8 @@ public class MovieSessionControllerTests {
     public static final String ROMANTIC_TAG = "romantic";
     public static final String MOVIE_1_NAME = "Movie 1";
     public static final String MOVIE_2_NAME = "Movie 2";
-    public static final Date TIMESLOT_ONE = new Date(2022,12,16,16,30);
-    public static final Date TIMESLOT_TWO = new Date(2022,12,17,17,30);
+    public static final GregorianCalendar TIMESLOT_ONE = new GregorianCalendar(2022+1900, 12, 17, 14, 30);
+    public static final GregorianCalendar TIMESLOT_TWO = new GregorianCalendar(2022+1900,12,17,17,30);
     public static final Date TIMESLOT_THREE = new Date(2022,12,18,18,30);
     public static final String HOUSE_ONE = "HOUSE ONE";
     public static final int HOUSE_ONE_ROW_NUMBER = 20;
@@ -64,14 +65,6 @@ public class MovieSessionControllerTests {
     @Test
     void should_return_all_movie_sessions_when_find_all_given_movie_sessions() throws Exception {
         //given
-        Tag tag1 = new Tag(new ObjectId().toString(), ACTION_TAG);
-        List<Tag> tags1 = Arrays.asList(tag1);
-        Tag tag2 = new Tag(new ObjectId().toString(), ROMANTIC_TAG);
-        List<Tag> tags2 = Arrays.asList(tag2);
-
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null);
-        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null);
-
         Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
         Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
 
@@ -92,13 +85,11 @@ public class MovieSessionControllerTests {
             }
         }
 
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(), movie1, timeslot1,
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(), timeslot1,
                 house1, MOVIE_1_PRICE, seats1);
-        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), movie2, timeslot2,
+        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2,
                 house2, MOVIE_2_PRICE, seats2);
 
-        tagRepository.saveAll(Arrays.asList(tag1,tag2));
-        movieRepository.saveAll(Arrays.asList(movie1, movie2));
         timeslotRepository.saveAll(Arrays.asList(timeslot1, timeslot2));
         houseRepository.saveAll(Arrays.asList(house1, house2));
         movieSessionRepository.saveAll(Arrays.asList(movieSession1,movieSession2));
@@ -107,13 +98,11 @@ public class MovieSessionControllerTests {
         client.perform(MockMvcRequestBuilders.get("/moviesessions"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath(
-                        "$[*].movie.name", containsInAnyOrder(movie1.getName(), movie2.getName()
-                        )))
-                .andExpect(MockMvcResultMatchers.jsonPath(
-                        "$[*].movie.tags[0].name", containsInAnyOrder(tag1.getName(), tag2.getName())
-                ))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.timeslot.startDateTime").value(timeslot1.getStartDateTime()))
+//                .andExpect(MockMvcResultMatchers.jsonPath(
+//                        "$[*].timeslot.startDateTime", containsInAnyOrder(
+//                                timeslot1.getStartDateTime().toString(), timeslot2.getStartDateTime().toString()
+//                        )
+//                ))
                 .andExpect(MockMvcResultMatchers.jsonPath(
                         "$[*].house.name", containsInAnyOrder(house1.getName(), house2.getName()
                 )))
@@ -137,10 +126,6 @@ public class MovieSessionControllerTests {
     @Test
     void should_return_movie_session_when_find_by_id_given_id() throws Exception {
         //given
-        Tag tag1 = new Tag(new ObjectId().toString(), ACTION_TAG);
-        List<Tag> tags1 = Arrays.asList(tag1);
-
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null);
 
         Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
 
@@ -153,11 +138,9 @@ public class MovieSessionControllerTests {
             }
         }
 
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(), movie1, timeslot1,
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(), timeslot1,
                 house1, MOVIE_1_PRICE, seats1);
 
-        tagRepository.save(tag1);
-        movieRepository.save(movie1);
         timeslotRepository.save(timeslot1);
         houseRepository.save(house1);
         movieSessionRepository.save(movieSession1);
@@ -165,8 +148,6 @@ public class MovieSessionControllerTests {
         //when
         client.perform(MockMvcRequestBuilders.get("/moviesessions/{id}", movieSession1.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.movie.name").value(movie1.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.movie.tags[0].name").value(tag1.getName()))
 //                .andExpect(MockMvcResultMatchers.jsonPath("$.timeslot.startDateTime").value(timeslot1.getStartDateTime()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.house.name").value(house1.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.house.numberOfRow").value(house1.getNumberOfRow()))
@@ -182,7 +163,9 @@ public class MovieSessionControllerTests {
         // when
         // then
         client.perform(MockMvcRequestBuilders.get("/moviesessions/{id}", new ObjectId().toString()))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MovieSessionNotFoundException))
+                .andExpect(result -> assertEquals("Movie Session Not Found", result.getResolvedException().getMessage()));;
     }
     
     

@@ -23,7 +23,6 @@ import static org.hamcrest.Matchers.hasSize;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class MovieSessionControllerTests {
-
     @Autowired
     MockMvc client;
 
@@ -52,6 +51,7 @@ public class MovieSessionControllerTests {
     public static final String MOVIE_2_NAME = "Movie 2";
     public static final Date TIMESLOT_ONE = new Date(2022,12,16,16,30);
     public static final Date TIMESLOT_TWO = new Date(2022,12,17,17,30);
+    public static final Date TIMESLOT_THREE = new Date(2022,12,18,18,30);
     public static final String HOUSE_ONE = "HOUSE ONE";
     public static final int HOUSE_ONE_ROW_NUMBER = 20;
     public static final int HOUSE_ONE_COL_NUMBER = 20;
@@ -97,7 +97,6 @@ public class MovieSessionControllerTests {
         MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), movie2, timeslot2,
                 house2, MOVIE_2_PRICE, seats2);
 
-        List<MovieSession> movieSessions = Arrays.asList(movieSession1, movieSession2);
         tagRepository.saveAll(Arrays.asList(tag1,tag2));
         movieRepository.saveAll(Arrays.asList(movie1, movie2));
         timeslotRepository.saveAll(Arrays.asList(timeslot1, timeslot2));
@@ -175,6 +174,15 @@ public class MovieSessionControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(movieSession1.getPrice()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.seats", hasSize(house1.getNumberOfRow()*house1.getNumberOfColumn())));
         //then
+    }
+
+    @Test
+    void should_return_404_when_perform_get_by_id_given_id_not_exist() throws Exception {
+        // given
+        // when
+        // then
+        client.perform(MockMvcRequestBuilders.get("/moviesessions/{id}", new ObjectId().toString()))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
     
     

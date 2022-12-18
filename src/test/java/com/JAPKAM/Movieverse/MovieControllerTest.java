@@ -92,7 +92,37 @@ public class MovieControllerTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(2)))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Movie 1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Movie 2"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(MOVIE_1_NAME))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(MOVIE_2_NAME));
+    }
+
+    @Test
+    void should_get_movie_when_perform_get_by_id_given_a_id() throws Exception {
+        //given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+
+
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
+
+        List<Seat> seats1 = new ArrayList<>();
+        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
+            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
+                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
+        Binary image1 = new Binary(new byte[1]);
+        String id = new ObjectId().toString();
+        Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,image1,Arrays.asList(movieSession1), RELEASE_DATE1,
+                RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        movieRepository.save(movie1);
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movies/{id}",movie1.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(MOVIE_1_NAME));
     }
 }

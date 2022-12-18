@@ -107,7 +107,7 @@ public class MovieServiceTest {
         MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
         Binary image1 = new Binary(new byte[1]);
         String id = new ObjectId().toString();
-                Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,image1,Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,image1,Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
         given(movieRepository.findById(id)).willReturn(Optional.of(movie1));
         //when
         Movie result = movieService.findById(id);

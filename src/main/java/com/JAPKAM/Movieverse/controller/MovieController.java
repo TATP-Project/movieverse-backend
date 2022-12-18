@@ -2,7 +2,9 @@ package com.JAPKAM.Movieverse.controller;
 
 import com.JAPKAM.Movieverse.entity.Movie;
 import com.JAPKAM.Movieverse.service.MovieService;
+import com.mongodb.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,5 +22,11 @@ public class MovieController {
     @GetMapping
     public List<Movie> getAll() {
         return movieService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Movie getById(@NonNull @PathVariable String id){
+        Movie findMovie = movieService.findById(id);
+        return movieService.findById(id);
     }
 }

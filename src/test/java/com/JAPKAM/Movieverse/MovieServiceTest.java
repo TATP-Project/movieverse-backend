@@ -115,4 +115,43 @@ public class MovieServiceTest {
         verify(movieRepository).findById(id);
         assertThat(result,equalTo(movie1));
     }
+
+    @Test
+    void should_return_sessions_of_movie_1_when_find_all_sessions_by_movie_1_given_movie_1_id() {
+        //given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
+        House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
+        List<Seat> seats1 = new ArrayList<>();
+        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
+            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
+                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+
+        List<Seat> seats2 = new ArrayList<>();
+        for(int i = 0 ; i < house2.getNumberOfRow(); i++){
+            for(int j =0 ;j <house2.getNumberOfColumn(); j++) {
+                seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
+        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2,
+                house2, MOVIE_2_PRICE, seats2);
+        Binary image1 = new Binary(new byte[1]);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,image1,Arrays.asList(movieSession1, movieSession2), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+
+        when(movieRepository.findById(movie1.getId())).thenReturn(Optional.of(movie1));
+        //when
+        List<MovieSession> movieSessions = movieService.findAllMovieSession(movie1.getId());
+
+        //then
+        assertThat(movieSessions, hasSize(2));
+        assertThat(movieSessions.get(0), equalTo(movieSession1));
+        assertThat(movieSessions.get(1), equalTo(movieSession2));
+        verify(movieRepository).findById(movie1.getId());
+    }
 }

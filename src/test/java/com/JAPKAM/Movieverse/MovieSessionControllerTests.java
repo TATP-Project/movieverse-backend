@@ -4,22 +4,25 @@ import com.JAPKAM.Movieverse.entity.*;
 import com.JAPKAM.Movieverse.exception.MovieNotFoundException;
 import com.JAPKAM.Movieverse.exception.MovieSessionNotFoundException;
 import com.JAPKAM.Movieverse.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -167,6 +170,51 @@ public class MovieSessionControllerTests {
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MovieSessionNotFoundException))
                 .andExpect(result -> assertEquals("Movie Session Not Found", result.getResolvedException().getMessage()));;
     }
-    
+    @Test
+    void should_return_list_of_seats_when_perform_get_given_movie_session() throws Exception {
+        // given
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+                seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        MovieSession movieSession1 = new MovieSession(id, null, null,
+                house1, MOVIE_1_PRICE, seats1);
+        movieSessionRepository.save(movieSession1);
+        // when
+        client.perform(MockMvcRequestBuilders.get("/moviesessions/{id}/seats", id))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].row").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].column").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].status").value("AVAILABLE"));
+        // then
+
+
+    }
+    @Test
+    void should_update_seat_when_perform_put_given_movie_session() throws Exception {
+        // given
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+        String seatId = new ObjectId().toString();
+        seats1.add(new Seat(seatId, 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        MovieSession movieSession1 = new MovieSession(id, null, null,
+                house1, MOVIE_1_PRICE, seats1);
+        movieSessionRepository.save(movieSession1);
+        Seat newSeat = new Seat(seatId, 2, 2, SeatStatus.RESERVED);
+        String newSeatJson = new ObjectMapper().writeValueAsString(newSeat);
+        // when & then
+        client.perform(MockMvcRequestBuilders.put("/moviesessions/{id}/seats", id).contentType(MediaType.APPLICATION_JSON).content(newSeatJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.row").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.column").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("RESERVED"));
+
+    }
     
 }

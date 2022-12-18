@@ -2,11 +2,9 @@ package com.JAPKAM.Movieverse.controller;
 
 import com.JAPKAM.Movieverse.entity.Movie;
 import com.JAPKAM.Movieverse.entity.MovieSession;
+import com.JAPKAM.Movieverse.entity.Seat;
 import com.JAPKAM.Movieverse.service.MovieSessionService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +26,15 @@ public class MovieSessionController {
     @GetMapping("/{id}")
     public MovieSession getMovieById(@PathVariable String id) {
         return movieSessionService.findById(id);
+    }
+
+    @GetMapping("/{id}/seats")
+    public List<Seat> getSeats(@PathVariable String id) {
+        return movieSessionService.getSeats(id);
+    }
+
+    @PutMapping("/{id}/seats")
+    public Seat updateSeat(@PathVariable String id, @RequestBody Seat seat){
+        return movieSessionService.updateSeat(id, seat);
     }
 }

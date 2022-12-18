@@ -3,12 +3,17 @@ package com.JAPKAM.Movieverse;
 import com.JAPKAM.Movieverse.entity.*;
 import com.JAPKAM.Movieverse.repository.MovieSessionRepository;
 import com.JAPKAM.Movieverse.service.MovieSessionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -114,6 +119,53 @@ public class MovieSessionServiceTests {
         //then
         assertThat(movieSession1, equalTo(returnedMoviesSession));
         verify(movieSessionRepository).findById(movieSession1.getId());
+    }
+
+    @Test
+    void should_return_all_seats_when_get_seats_given_movie_session_id() throws Exception {
+        //given
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+        seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        MovieSession movieSession1 = new MovieSession(id, null, null,
+                house1, MOVIE_1_PRICE, seats1);
+
+        when(movieSessionRepository.findById(id)).thenReturn(Optional.of(movieSession1));
+        //when
+
+        List<Seat> returnedSeats = movieSessionService.findById(id).getSeats();
+
+        //then
+        assertThat(seats1, equalTo(returnedSeats));
+        verify(movieSessionRepository).findById(movieSession1.getId());
+    }
+    @Test
+    void should_update_seat_status_when_update_given_movie_session() throws Exception {
+        // given
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+        String seatId = new ObjectId().toString();
+        seats1.add(new Seat(seatId, 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        MovieSession movieSession1 = new MovieSession(id, null, null,
+                house1, MOVIE_1_PRICE, seats1);
+        movieSessionRepository.save(movieSession1);
+        Seat newSeat = new Seat(seatId, 2, 2, SeatStatus.RESERVED);
+
+        when(movieSessionRepository.findById(id)).thenReturn(Optional.of(movieSession1));
+        // when
+        Seat updatedSeat = movieSessionService.updateSeat(id,newSeat);
+        // then
+        verify(movieSessionRepository).findById(id);
+        assertThat(updatedSeat.getRow(),equalTo(1));
+        assertThat(updatedSeat.getColumn(),equalTo(1));
+        assertThat(updatedSeat.getStatus(),equalTo(SeatStatus.RESERVED));
+
     }
 
 

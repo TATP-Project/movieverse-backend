@@ -9,8 +9,6 @@ public class MovieSession {
     @MongoId(FieldType.OBJECT_ID)
     private String id;
     @DBRef
-    private Movie movie;
-    @DBRef
     private Timeslot timeslot;
     @DBRef
     private House house;
@@ -18,9 +16,8 @@ public class MovieSession {
 
     private List<Seat> seats;
 
-    public MovieSession(String id, Movie movie, Timeslot timeslot, House house, double price, List<Seat> seats) {
+    public MovieSession(String id, Timeslot timeslot, House house, double price, List<Seat> seats) {
         this.id = id;
-        this.movie = movie;
         this.timeslot = timeslot;
         this.house = house;
         this.price = price;
@@ -35,13 +32,6 @@ public class MovieSession {
         this.id = id;
     }
 
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
 
     public Timeslot getTimeslot() {
         return timeslot;

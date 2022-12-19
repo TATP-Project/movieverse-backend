@@ -58,7 +58,7 @@ public class MovieSessionControllerTests {
     public static final String MOVIE_2_NAME = "Movie 2";
     public static final GregorianCalendar TIMESLOT_ONE = new GregorianCalendar(2022+1900, 12, 17, 14, 30);
     public static final GregorianCalendar TIMESLOT_TWO = new GregorianCalendar(2022+1900,12,17,17,30);
-    public static final Date TIMESLOT_THREE = new Date(2022,12,18,18,30);
+    public static final GregorianCalendar TIMESLOT_THREE = new GregorianCalendar(2022+1900,12,17,20,30);
     public static final String HOUSE_ONE = "HOUSE ONE";
     public static final int HOUSE_ONE_ROW_NUMBER = 10;
     public static final int HOUSE_ONE_COL_NUMBER = 10;
@@ -224,6 +224,7 @@ public class MovieSessionControllerTests {
 
         Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
         Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
+        Timeslot timeslot3 = new Timeslot(new ObjectId().toString(), TIMESLOT_THREE);
         timeslotRepository.saveAll(Arrays.asList(timeslot1, timeslot2));
 
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
@@ -244,7 +245,8 @@ public class MovieSessionControllerTests {
             }
         }
         Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
-        movieRepository.save(movie1);
+        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        movieRepository.saveAll(Arrays.asList(movie1));
 
         String district1 = DistrictName.KOWLOON.toString();
         String district2 = DistrictName.HONG_KONG.toString();
@@ -257,7 +259,9 @@ public class MovieSessionControllerTests {
                 house1,MOVIE_1_PRICE,seats1);
         MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2, cinema2, movie1,
                 house2, MOVIE_1_PRICE, seats2);
-        movieSessionRepository.saveAll(Arrays.asList(movieSession1, movieSession2));
+        MovieSession movieSession3 = new MovieSession(new ObjectId().toString(), timeslot3, cinema2, movie2,
+                house2, MOVIE_2_PRICE, seats2);
+        movieSessionRepository.saveAll(Arrays.asList(movieSession1, movieSession2, movieSession3));
         //when
         //then
         client.perform(MockMvcRequestBuilders.get("/movie-sessions?movieId={movieId}", movie1.getId()))

@@ -15,8 +15,7 @@ import java.util.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 public class MovieSessionServiceTests {
@@ -149,53 +148,36 @@ public class MovieSessionServiceTests {
 //    }
 
     @Test
-    void should_return_movie_sessions_of_movie_when_find_movie_session_by_movie_id_given_movie_id() {
+    void should_return_updated_seats_status_to_sold_when_update_seat_status_given_2_sold_seats() {
         //given
+
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
 
         Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
-        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
-        House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
-        List<Seat> seats1 = new ArrayList<>();
-        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
-            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
-                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-
-        List<Seat> seats2 = new ArrayList<>();
-        for(int i = 0 ; i < house2.getNumberOfRow(); i++){
-            for(int j =0 ;j <house2.getNumberOfColumn(); j++) {
-                seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
-
-
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+        List<Seat> seats = new ArrayList<>();
+        String seatId1 = new ObjectId().toString();
+        String seatId2 = new ObjectId().toString();
+        Seat soldSeat1 = new Seat(seatId1,1,1,SeatStatus.SOLD);
+        Seat soldSeat2 = new Seat(seatId2,1,2,SeatStatus.SOLD);
+        List<Seat> soldSeats = new ArrayList<>();
+        soldSeats.add(soldSeat1);
+        soldSeats.add(soldSeat2);
+        seats.add(new Seat(seatId1, 1, 1, SeatStatus.AVAILABLE));
+        seats.add(new Seat(seatId2, 1, 2, SeatStatus.AVAILABLE));
         String district1 = DistrictName.KOWLOON.toString();
-        String district2 = DistrictName.HONG_KONG.toString();
-
         Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
-        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),district2);
-
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1, cinema1, movie1,
-                house1,MOVIE_1_PRICE,seats1);
-        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2, cinema2, movie1,
-                house2, MOVIE_1_PRICE, seats2);
-
-        when(movieSessionRepository.findByMovieId(movie1.getId())).thenReturn(Arrays.asList(movieSession1, movieSession2));
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        String movieSessionId = new ObjectId().toString();
+        MovieSession movieSession1 = new MovieSession(movieSessionId, timeslot1, cinema1, movie1, house1, MOVIE_1_PRICE, seats);
+        when(movieSessionRepository.findById(movieSessionId)).thenReturn(Optional.of(movieSession1));
         //when
-
-        List<MovieSession> returnedMovieSessions = movieSessionService.findByMovieId(movie1.getId());
-
+        List<Seat> updatedSeats = movieSessionService.updateSeatStatusToSold(movieSessionId,soldSeats);
         //then
-        assertThat(returnedMovieSessions, hasSize(2));
-        assertThat(returnedMovieSessions.get(0), equalTo(movieSession1));
-        assertThat(returnedMovieSessions.get(1), equalTo(movieSession2));
-        verify(movieSessionRepository).findByMovieId(movie1.getId());
+        assertThat(updatedSeats, hasSize(2));
+        assertThat(updatedSeats.get(0).getRow(),equalTo(1));
+        assertThat(updatedSeats.get(0).getColumn(),equalTo(1));
+        assertThat(updatedSeats.get(0).getStatus(),equalTo(SeatStatus.SOLD));
     }
-
-
 
 }

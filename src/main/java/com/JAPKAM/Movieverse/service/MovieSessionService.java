@@ -2,12 +2,16 @@ package com.JAPKAM.Movieverse.service;
 
 import com.JAPKAM.Movieverse.entity.MovieSession;
 import com.JAPKAM.Movieverse.entity.Seat;
+import com.JAPKAM.Movieverse.entity.SeatStatus;
 import com.JAPKAM.Movieverse.exception.InvalidSeatException;
 import com.JAPKAM.Movieverse.exception.MovieSessionNotFoundException;
+import com.JAPKAM.Movieverse.exception.UnavailableSeatException;
 import com.JAPKAM.Movieverse.repository.MovieSessionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieSessionService {
@@ -41,6 +45,18 @@ public class MovieSessionService {
         currentMovieSession.setSeats(seatsList);
         movieSessionRepository.save(currentMovieSession);
         return seatToUpdate;
+    }
+
+
+    public List<Seat> updateSeatStatusToSold(String id, List<Seat> seats) {
+        MovieSession currentMovieSession = movieSessionRepository.findById(id).orElseThrow(MovieSessionNotFoundException::new);
+        List<Seat> oldSeats = currentMovieSession.getSeats();
+        List <SeatStatus> statusList = oldSeats.stream().map(seat -> seat.getStatus()).collect(Collectors.toList());
+        int availableCount = (int)statusList.stream().filter(status -> status == SeatStatus.AVAILABLE).count();
+        if (availableCount != seats.size()){
+            throw new UnavailableSeatException();
+        }
+        return seats.stream().map(seat -> updateSeat(id, seat)).collect(Collectors.toList());
     }
 
     public List<MovieSession> findByMovieId(String id){

@@ -2,5 +2,6 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://${MONGOUSER}:${MONGOPASSWORD}@${MONGOHOST}:${MONGOPORT}
+      uri: mongodb+srv://${MONGOUSER}:${MONGOPASSWORD}@${MONGOHOST}
       database: ${DATABASE_NAME}
+

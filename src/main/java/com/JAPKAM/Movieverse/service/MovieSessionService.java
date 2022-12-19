@@ -8,6 +8,7 @@ import com.JAPKAM.Movieverse.repository.MovieSessionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieSessionService {
@@ -41,5 +42,10 @@ public class MovieSessionService {
         currentMovieSession.setSeats(seatsList);
         movieSessionRepository.save(currentMovieSession);
         return seatToUpdate;
+    }
+
+
+    public List<Seat> updateSeatStatusToSold(String id, List<Seat> seats) {
+        return seats.stream().map(seat -> updateSeat(id, seat)).collect(Collectors.toList());
     }
 }

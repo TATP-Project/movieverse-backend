@@ -108,10 +108,8 @@ public class CinemaControllerTests {
         String district1 = DistrictName.KOWLOON.toString();
         String district2 = DistrictName.HONG_KONG.toString();
 
-        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movie1),district1);
-        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),
-                Arrays.asList(movie2),district2);
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1) ,district1);
+        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),district2);
         cinemaRepository.saveAll(Arrays.asList(cinema1, cinema2));
 
         //when
@@ -120,9 +118,6 @@ public class CinemaControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath(
                         "$[*].name", containsInAnyOrder(cinema1.getName(), cinema2.getName()))
-                )
-                .andExpect(MockMvcResultMatchers.jsonPath(
-                        "$[*].movies[0].name", containsInAnyOrder(movie1.getName(), movie2.getName()))
                 )
                 .andExpect(MockMvcResultMatchers.jsonPath(
                         "$[*].houses[0].name", containsInAnyOrder(house1.getName(), house2.getName())
@@ -134,57 +129,4 @@ public class CinemaControllerTests {
         //then
     }
 
-    @Test
-    void should_return_movies_of_cinema_when_find_movie_by_cinema_id_given_cinema_id() throws Exception {
-        //given
-        Tag tag1 = new Tag(new ObjectId().toString(), ACTION_TAG);
-        Tag tag2 = new Tag(new ObjectId().toString(), ROMANTIC_TAG);
-        List<Tag> tags1 = Arrays.asList(tag1);
-        List<Tag> tags2 = Arrays.asList(tag2);
-        tagRepository.saveAll(Arrays.asList(tag1, tag2));
-
-        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
-        timeslotRepository.saveAll(Arrays.asList(timeslot1, timeslot2));
-
-        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
-        House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
-        houseRepository.saveAll(Arrays.asList(house1, house2));
-
-        List<Seat> seats1 = new ArrayList<>();
-        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
-            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
-                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-
-        List<Seat> seats2 = new ArrayList<>();
-        for(int i = 0 ; i < house2.getNumberOfRow(); i++){
-            for(int j =0 ;j <house2.getNumberOfColumn(); j++) {
-                seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
-        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2,
-                house2, MOVIE_2_PRICE, seats2);
-        movieSessionRepository.saveAll(Arrays.asList(movieSession1, movieSession2));
-
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null,Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
-        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null,Arrays.asList(movieSession2), RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
-        movieRepository.saveAll(Arrays.asList(movie1, movie2));
-
-
-        String district1 = DistrictName.KOWLOON.toString();
-
-        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movie1, movie2),district1);
-        cinemaRepository.save(cinema1);
-
-        client.perform(MockMvcRequestBuilders.get("/cinemas/{id}/movies", cinema1.getId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath(
-                        "$[*].name", containsInAnyOrder(movie1.getName(), movie2.getName()))
-                );
-    }
 }

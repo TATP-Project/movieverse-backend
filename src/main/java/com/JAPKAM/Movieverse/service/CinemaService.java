@@ -24,12 +24,4 @@ public class CinemaService {
     public Cinema findById(String id) {
         return  cinemaRepository.findById(id).orElseThrow(CinemaNotFoundException::new);
     }
-
-    public List<Movie> findMoviesByCinemaId(String id) {
-        return findById(id).getMovies();
-    }
-
-//    public List<Movie> findAllMovies(String id) {
-//        return findById(id).getMovies();
-//    }
 }

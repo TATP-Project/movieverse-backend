@@ -174,12 +174,10 @@ public class MovieSessionServiceTests {
         //when
         List<Seat> updatedSeats = movieSessionService.updateSeatStatusToSold(movieSessionId,soldSeats);
         //then
-        verify(movieSessionRepository,times(2)).findById(movieSessionId);
+        assertThat(updatedSeats, hasSize(2));
         assertThat(updatedSeats.get(0).getRow(),equalTo(1));
         assertThat(updatedSeats.get(0).getColumn(),equalTo(1));
         assertThat(updatedSeats.get(0).getStatus(),equalTo(SeatStatus.SOLD));
-}
-
-
+    }
 
 }

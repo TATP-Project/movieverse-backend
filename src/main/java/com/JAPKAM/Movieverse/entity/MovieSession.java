@@ -10,15 +10,23 @@ public class MovieSession {
     private String id;
     @DBRef
     private Timeslot timeslot;
+
+    @DBRef
+    private Cinema cinema;
+
+    @DBRef
+    private Movie movie;
     @DBRef
     private House house;
     private double price;
 
     private List<Seat> seats;
 
-    public MovieSession(String id, Timeslot timeslot, House house, double price, List<Seat> seats) {
+    public MovieSession(String id, Timeslot timeslot, Cinema cinema, Movie movie, House house, double price, List<Seat> seats) {
         this.id = id;
         this.timeslot = timeslot;
+        this.cinema = cinema;
+        this.movie = movie;
         this.house = house;
         this.price = price;
         this.seats = seats;
@@ -32,13 +40,28 @@ public class MovieSession {
         this.id = id;
     }
 
-
     public Timeslot getTimeslot() {
         return timeslot;
     }
 
     public void setTimeslot(Timeslot timeslot) {
         this.timeslot = timeslot;
+    }
+
+    public Cinema getCinema() {
+        return cinema;
+    }
+
+    public void setCinema(Cinema cinema) {
+        this.cinema = cinema;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 
     public House getHouse() {

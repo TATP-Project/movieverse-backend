@@ -148,6 +148,54 @@ public class MovieSessionServiceTests {
 //
 //    }
 
+    @Test
+    void should_return_movie_sessions_of_movie_when_find_movie_session_by_movie_id_given_movie_id() {
+        //given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
+        House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
+        List<Seat> seats1 = new ArrayList<>();
+        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
+            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
+                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+
+        List<Seat> seats2 = new ArrayList<>();
+        for(int i = 0 ; i < house2.getNumberOfRow(); i++){
+            for(int j =0 ;j <house2.getNumberOfColumn(); j++) {
+                seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+
+
+        String district1 = DistrictName.KOWLOON.toString();
+        String district2 = DistrictName.HONG_KONG.toString();
+
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
+        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),district2);
+
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1, cinema1, movie1,
+                house1,MOVIE_1_PRICE,seats1);
+        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2, cinema2, movie1,
+                house2, MOVIE_1_PRICE, seats2);
+
+        when(movieSessionRepository.findByMovieId(movie1.getId())).thenReturn(Arrays.asList(movieSession1, movieSession2));
+        //when
+
+        List<MovieSession> returnedMovieSessions = movieSessionService.findByMovieId(movie1.getId());
+
+        //then
+        assertThat(returnedMovieSessions, hasSize(2));
+        assertThat(returnedMovieSessions.get(0), equalTo(movieSession1));
+        assertThat(returnedMovieSessions.get(1), equalTo(movieSession2));
+        verify(movieSessionRepository).findByMovieId(movie1.getId());
+    }
+
 
 
 }

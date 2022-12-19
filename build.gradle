@@ -28,6 +28,6 @@ jar {
 	classifier = ''
 	enabled = false
 	manifest {
-		attributes('Main-Class': 'com.rest.springbootemployee.SpringBootEmployeeApplication')
+		attributes('Main-Class': 'com.JAPKAM.Movieverse.MovieverseApplication')
 	}
 }

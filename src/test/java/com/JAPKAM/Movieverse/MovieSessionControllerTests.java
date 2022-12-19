@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -121,7 +123,7 @@ public class MovieSessionControllerTests {
 
         
         //when
-        client.perform(MockMvcRequestBuilders.get("/moviesessions"))
+        client.perform(MockMvcRequestBuilders.get("/movie-sessions"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
 //                .andExpect(MockMvcResultMatchers.jsonPath(
@@ -160,7 +162,7 @@ public class MovieSessionControllerTests {
         // given
         // when
         // then
-        client.perform(MockMvcRequestBuilders.get("/moviesessions/{id}", new ObjectId().toString()))
+        client.perform(MockMvcRequestBuilders.get("/movie-sessions/{id}", new ObjectId().toString()))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MovieSessionNotFoundException))
                 .andExpect(result -> assertEquals("Movie Session Not Found", result.getResolvedException().getMessage()));;
@@ -212,5 +214,67 @@ public class MovieSessionControllerTests {
 //                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("RESERVED"));
 //
 //    }
+
+    @Test
+    void should_return_movie_sessions_of_movie_when_find_movie_session_by_movie_id_given_movie_id() throws Exception {
+        //given
+        Tag tag1 = new Tag(new ObjectId().toString(), ACTION_TAG);
+        List<Tag> tags1 = Arrays.asList(tag1);
+        tagRepository.save(tag1);
+
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
+        timeslotRepository.saveAll(Arrays.asList(timeslot1, timeslot2));
+
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
+        House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
+        houseRepository.saveAll(Arrays.asList(house1, house2));
+
+        List<Seat> seats1 = new ArrayList<>();
+        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
+            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
+                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+
+        List<Seat> seats2 = new ArrayList<>();
+        for(int i = 0 ; i < house2.getNumberOfRow(); i++){
+            for(int j =0 ;j <house2.getNumberOfColumn(); j++) {
+                seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        movieRepository.save(movie1);
+
+        String district1 = DistrictName.KOWLOON.toString();
+        String district2 = DistrictName.HONG_KONG.toString();
+
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
+        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),district2);
+        cinemaRepository.saveAll(Arrays.asList(cinema1, cinema2));
+
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1, cinema1, movie1,
+                house1,MOVIE_1_PRICE,seats1);
+        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2, cinema2, movie1,
+                house2, MOVIE_1_PRICE, seats2);
+        movieSessionRepository.saveAll(Arrays.asList(movieSession1, movieSession2));
+        //when
+        //then
+        client.perform(MockMvcRequestBuilders.get("/movie-sessions?movieId={movieId}", movie1.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].cinema.name", containsInAnyOrder(
+                        cinema1.getName(), cinema2.getName()
+                )))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].movie.name", containsInAnyOrder(
+                        movie1.getName(), movie1.getName()
+                )))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].house.name", containsInAnyOrder(
+                        house1.getName(), house2.getName()
+                )))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].price", containsInAnyOrder(
+                        MOVIE_1_PRICE, MOVIE_1_PRICE
+                )));
+    }
     
 }

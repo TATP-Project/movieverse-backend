@@ -42,4 +42,8 @@ public class MovieSessionService {
         movieSessionRepository.save(currentMovieSession);
         return seatToUpdate;
     }
+
+    public List<MovieSession> findByMovieId(String id){
+        return movieSessionRepository.findByMovieId(id);
+    }
 }

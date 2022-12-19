@@ -1,7 +1,6 @@
 package com.JAPKAM.Movieverse;
 
 import com.JAPKAM.Movieverse.entity.*;
-import com.JAPKAM.Movieverse.exception.MovieNotFoundException;
 import com.JAPKAM.Movieverse.exception.MovieSessionNotFoundException;
 import com.JAPKAM.Movieverse.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;

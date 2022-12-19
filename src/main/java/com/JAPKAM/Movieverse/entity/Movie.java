@@ -3,7 +3,6 @@ package com.JAPKAM.Movieverse.entity;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.*;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package com.JAPKAM.Movieverse.advice;
 
-import com.JAPKAM.Movieverse.exception.HouseNotFoundException;
 import com.JAPKAM.Movieverse.exception.MovieNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

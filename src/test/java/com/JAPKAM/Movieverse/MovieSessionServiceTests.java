@@ -227,5 +227,37 @@ public class MovieSessionServiceTests {
         assertThat(returnedMovieSessions.get(1), equalTo(movieSession2));
         verify(movieSessionRepository).findByMovieId(movie1.getId());
     }
+    @Test
+    void should_return_price_when_get_price_given_movie_id_and_movie_session_id() {
+        //given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
 
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
+        List<Seat> seats1 = new ArrayList<>();
+        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
+            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
+                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
+            }
+        }
+
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+
+        String district1 = DistrictName.KOWLOON.toString();
+
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
+
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1, cinema1, movie1,
+            house1,MOVIE_1_PRICE,seats1);
+
+
+        when(movieSessionRepository.findById(movieSession1.getId())).thenReturn(Optional.of(movieSession1));
+        //when
+
+        double actualPrice = movieSessionService.getPriceByMovieSessionId(movieSession1.getId());
+
+        //then
+        assertThat(actualPrice, equalTo(MOVIE_1_PRICE));
+        verify(movieSessionRepository).findById(movieSession1.getId());
+    }
 }

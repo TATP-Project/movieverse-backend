@@ -53,28 +53,11 @@ public class CinemaServiceTests {
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
         List<Tag> tags2 = Arrays.asList(new Tag(new ObjectId().toString(), ROMANTIC_TAG));
 
-        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-        Timeslot timeslot2 = new Timeslot(new ObjectId().toString(), TIMESLOT_TWO);
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
         House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
-        List<Seat> seats1 = new ArrayList<>();
-        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
-            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
-                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
 
-        List<Seat> seats2 = new ArrayList<>();
-        for(int i = 0 ; i < house2.getNumberOfRow(); i++){
-            for(int j =0 ;j <house2.getNumberOfColumn(); j++) {
-                seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
-        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2,
-                house2, MOVIE_2_PRICE, seats2);
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null,Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
-        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null,Arrays.asList(movieSession2), RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null, RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
 
         String district1 = DistrictName.KOWLOON.toString();
         String district2 = DistrictName.HONG_KONG.toString();
@@ -99,21 +82,11 @@ public class CinemaServiceTests {
     void should_return_cinema_1_when_find_by_id_given_id() {
         //given
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
-        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
-        List<Seat> seats1 = new ArrayList<>();
-        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
-            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
-                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
-
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null,Arrays.asList(movieSession1),
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null,
                 RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
 
         String district1 = DistrictName.KOWLOON.toString();
-
         Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
                 Arrays.asList(movie1),district1);
 

@@ -19,21 +19,17 @@ public class Movie {
 
     private Binary image;
 
-    @DBRef
-    private List<MovieSession> movieSessions;
-
     private GregorianCalendar releaseDate;
     private int runningTime;
     private Language language;
     private Language subtitle;
 
-    public Movie(String id, String name, List<Tag> tags, Binary image, List<MovieSession> movieSessions,
+    public Movie(String id, String name, List<Tag> tags, Binary image,
                  GregorianCalendar releaseDate, int runningTime, Language language, Language subtitle) {
         this.id = id;
         this.name = name;
         this.tags = tags;
         this.image = image;
-        this.movieSessions = movieSessions;
         this.releaseDate = releaseDate;
         this.runningTime = runningTime;
         this.language = language;
@@ -70,14 +66,6 @@ public class Movie {
 
     public void setImage(Binary image) {
         this.image = image;
-    }
-
-    public List<MovieSession> getMovieSessions() {
-        return movieSessions;
-    }
-
-    public void setMovieSessions(List<MovieSession> movieSessions) {
-        this.movieSessions = movieSessions;
     }
 
     public GregorianCalendar getReleaseDate() {

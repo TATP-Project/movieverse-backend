@@ -28,25 +28,12 @@ public class CinemaServiceTests {
 
     @InjectMocks
     CinemaService cinemaService;
-
-    public static final String ACTION_TAG = "action";
-    public static final String ROMANTIC_TAG = "romantic";
-    public static final String MOVIE_1_NAME = "Movie 1";
-    public static final String MOVIE_2_NAME = "Movie 2";
     public static final String HOUSE_ONE = "HOUSE ONE";
     public static final int HOUSE_ONE_ROW_NUMBER = 20;
     public static final int HOUSE_ONE_COL_NUMBER = 20;
     public static final String HOUSE_TWO = "HOUSE TWO";
     public static final int HOUSE_TWO_ROW_NUMBER = 5;
     public static final int HOUSE_TWO_COL_NUMBER = 10;
-    public static final GregorianCalendar TIMESLOT_ONE = new GregorianCalendar(2022+1900, 12, 17, 14, 30);
-    public static final GregorianCalendar TIMESLOT_TWO = new GregorianCalendar(2022+1900,12,17,17,30);
-    public static final double MOVIE_1_PRICE = 80;
-    public static final double MOVIE_2_PRICE = 90;
-    public static final GregorianCalendar RELEASE_DATE1 = new GregorianCalendar(2022+1900,11,17);
-    public static final GregorianCalendar RELEASE_DATE2 = new GregorianCalendar(2022+1900,10,17);
-    public static final int RUNNING_TIME1 = 120;
-    public static final int RUNNING_TIME2 = 100;
     @Test
     void should_return_all_cinema_when_find_all_given_cinemas() {
         //given

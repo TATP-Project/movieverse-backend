@@ -73,8 +73,8 @@ public class MovieSessionServiceTests {
         MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
         MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2,
                 house2, MOVIE_2_PRICE, seats2);
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null,Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
-        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null,Arrays.asList(movieSession2), RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null, RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
 
         List<MovieSession> movieSessions = Arrays.asList(movieSession1, movieSession2);
         when(movieSessionRepository.findAll()).thenReturn(movieSessions);

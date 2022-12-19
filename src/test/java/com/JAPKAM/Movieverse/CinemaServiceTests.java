@@ -28,6 +28,11 @@ public class CinemaServiceTests {
 
     @InjectMocks
     CinemaService cinemaService;
+
+    public static final String ACTION_TAG = "action";
+    public static final String ROMANTIC_TAG = "romantic";
+    public static final String MOVIE_1_NAME = "Movie 1";
+    public static final String MOVIE_2_NAME = "Movie 2";
     public static final String HOUSE_ONE = "HOUSE ONE";
     public static final int HOUSE_ONE_ROW_NUMBER = 20;
     public static final int HOUSE_ONE_COL_NUMBER = 20;
@@ -39,19 +44,9 @@ public class CinemaServiceTests {
         //given
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
         House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
-        List<Seat> seats1 = new ArrayList<>();
-        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
-            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
-                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
 
-        List<Seat> seats2 = new ArrayList<>();
-        for(int i = 0 ; i < house2.getNumberOfRow(); i++){
-            for(int j =0 ;j <house2.getNumberOfColumn(); j++) {
-                seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null, RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
 
         String district1 = DistrictName.KOWLOON.toString();
         String district2 = DistrictName.HONG_KONG.toString();
@@ -74,15 +69,9 @@ public class CinemaServiceTests {
     void should_return_cinema_1_when_find_by_id_given_id() {
         //given
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
-        List<Seat> seats1 = new ArrayList<>();
-        for(int i = 0 ; i < house1.getNumberOfRow(); i++){
-            for(int j =0 ;j <house1.getNumberOfColumn(); j++) {
-                seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
-            }
-        }
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null,
 
         String district1 = DistrictName.KOWLOON.toString();
-
         Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
 
         when(cinemaRepository.findById(cinema1.getId())).thenReturn(Optional.of(cinema1));

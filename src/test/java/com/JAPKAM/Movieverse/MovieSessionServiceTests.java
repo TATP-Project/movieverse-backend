@@ -3,16 +3,12 @@ package com.JAPKAM.Movieverse;
 import com.JAPKAM.Movieverse.entity.*;
 import com.JAPKAM.Movieverse.repository.MovieSessionRepository;
 import com.JAPKAM.Movieverse.service.MovieSessionService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;
 
@@ -21,7 +17,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import java.util.Calendar;
 
 @ExtendWith(SpringExtension.class)
 public class MovieSessionServiceTests {

@@ -1,6 +1,5 @@
 package com.JAPKAM.Movieverse.controller;
 
-import com.JAPKAM.Movieverse.entity.Movie;
 import com.JAPKAM.Movieverse.entity.MovieSession;
 import com.JAPKAM.Movieverse.entity.Seat;
 import com.JAPKAM.Movieverse.service.MovieSessionService;

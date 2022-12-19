@@ -31,8 +31,4 @@ public class MovieController {
         return movieService.findById(id);
     }
 
-    @GetMapping("/{id}/moviessessions")
-    public List<MovieSession> findAllMovieSessionByMovie(@NonNull @PathVariable String id) {
-        return movieService.findAllMovieSession(id);
-    }
 }

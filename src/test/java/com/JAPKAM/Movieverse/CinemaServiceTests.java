@@ -3,6 +3,7 @@ package com.JAPKAM.Movieverse;
 import com.JAPKAM.Movieverse.entity.*;
 import com.JAPKAM.Movieverse.repository.CinemaRepository;
 import com.JAPKAM.Movieverse.service.CinemaService;
+import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,9 +40,16 @@ public class CinemaServiceTests {
     public static final String HOUSE_TWO = "HOUSE TWO";
     public static final int HOUSE_TWO_ROW_NUMBER = 5;
     public static final int HOUSE_TWO_COL_NUMBER = 10;
+
+    public static final GregorianCalendar RELEASE_DATE1 = new GregorianCalendar(2022+1900,11,17);
+    public static final GregorianCalendar RELEASE_DATE2 = new GregorianCalendar(2022+1900,10,17);
+    public static final int RUNNING_TIME1 = 120;
+    public static final int RUNNING_TIME2 = 100;
     @Test
     void should_return_all_cinema_when_find_all_given_cinemas() {
         //given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+        List<Tag> tags2 = Arrays.asList(new Tag(new ObjectId().toString(), ROMANTIC_TAG));
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
         House house2 = new House(new ObjectId().toString(), HOUSE_TWO, HOUSE_TWO_ROW_NUMBER, HOUSE_TWO_COL_NUMBER);
 
@@ -68,8 +76,11 @@ public class CinemaServiceTests {
     @Test
     void should_return_cinema_1_when_find_by_id_given_id() {
         //given
+
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null,
+        Binary image1 = new Binary(new byte[1]);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,image1, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
 
         String district1 = DistrictName.KOWLOON.toString();
         Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);

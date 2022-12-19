@@ -23,7 +23,4 @@ public class MovieService {
         return movieRepository.findById(id).orElseThrow(MovieNotFoundException::new);
     }
 
-    public  List<MovieSession> findAllMovieSession(String id) {
-        return findById(id).getMovieSessions();
-    }
 }

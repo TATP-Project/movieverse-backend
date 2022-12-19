@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/moviesessions")
+@RequestMapping("/movie-sessions")
 public class MovieSessionController {
 
     private MovieSessionService movieSessionService;
@@ -18,8 +18,13 @@ public class MovieSessionController {
     }
 
     @GetMapping
-    public List<MovieSession> findAllMovieSessions() {
+    public List<MovieSession> getAllMovieSessions() {
         return movieSessionService.findAll();
+    }
+
+    @GetMapping(params = "movieId")
+    public List<MovieSession> getAllMovieSessionsByMovieId(@RequestParam String movieId) {
+        return movieSessionService.findByMovieId(movieId);
     }
 
     @GetMapping("/{id}")
@@ -36,4 +41,5 @@ public class MovieSessionController {
     public Seat updateSeat(@PathVariable String id, @RequestBody Seat seat){
         return movieSessionService.updateSeat(id, seat);
     }
+
 }

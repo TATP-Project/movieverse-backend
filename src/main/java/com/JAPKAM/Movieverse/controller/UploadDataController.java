@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/testdata")
@@ -33,28 +30,28 @@ public class UploadDataController {
         this.timeslotRepository = timeslotRepository;
     }
 
-    public static final String CINEMA_1_NAME = "Cinema 1";
-    public static final String CINEMA_2_NAME = "Cinema 2";
-
     public static final String ACTION_TAG = "action";
     public static final String ROMANTIC_TAG = "romantic";
     public static final String MOVIE_1_NAME = "Movie 1";
     public static final String MOVIE_2_NAME = "Movie 2";
-    public static final String HOUSE_ONE = "HOUSE ONE";
-    public static final int HOUSE_ONE_ROW_NUMBER = 20;
-    public static final int HOUSE_ONE_COL_NUMBER = 20;
-    public static final String HOUSE_TWO = "HOUSE TWO";
-    public static final int HOUSE_TWO_ROW_NUMBER = 5;
-    public static final int HOUSE_TWO_COL_NUMBER = 10;
     public static final GregorianCalendar TIMESLOT_ONE = new GregorianCalendar(2022+1900, 12, 17, 14, 30);
     public static final GregorianCalendar TIMESLOT_TWO = new GregorianCalendar(2022+1900,12,17,17,30);
+    public static final Date TIMESLOT_THREE = new Date(2022,12,18,18,30);
+    public static final String HOUSE_ONE = "HOUSE ONE";
+    public static final int HOUSE_ONE_ROW_NUMBER = 10;
+    public static final int HOUSE_ONE_COL_NUMBER = 10;
+    public static final String HOUSE_TWO = "HOUSE TWO";
+    public static final int HOUSE_TWO_ROW_NUMBER = 10;
+    public static final int HOUSE_TWO_COL_NUMBER = 10;
     public static final double MOVIE_1_PRICE = 80;
     public static final double MOVIE_2_PRICE = 90;
+
     public static final GregorianCalendar RELEASE_DATE1 = new GregorianCalendar(2022+1900,11,17);
     public static final GregorianCalendar RELEASE_DATE2 = new GregorianCalendar(2022+1900,10,17);
     public static final int RUNNING_TIME1 = 120;
-    public static final int RUNNING_TIME2 = 100;
-
+    public static final int RUNNING_TIME2 = 120;
+    public static final String CINEMA_1_NAME = "CINEMA_1_NAME";
+    public static final String CINEMA_2_NAME = "CINEMA_2_NAME";
     @PostMapping
     void createTestData() {
         //given
@@ -85,23 +82,22 @@ public class UploadDataController {
                 seats2.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
             }
         }
-        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1,house1,MOVIE_1_PRICE,seats1);
-        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2,
-                house2, MOVIE_2_PRICE, seats2);
-        movieSessionRepository.saveAll(Arrays.asList(movieSession1, movieSession2));
-
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null,Arrays.asList(movieSession1), RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
-        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null,Arrays.asList(movieSession2), RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null, RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
         movieRepository.saveAll(Arrays.asList(movie1, movie2));
-
 
         String district1 = DistrictName.KOWLOON.toString();
         String district2 = DistrictName.HONG_KONG.toString();
 
-        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movie1),district1);
-        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),
-                Arrays.asList(movie2),district2);
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
+        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),district2);
         cinemaRepository.saveAll(Arrays.asList(cinema1, cinema2));
+
+        MovieSession movieSession1 = new MovieSession(new ObjectId().toString(),timeslot1, cinema1, movie1,
+                house1,MOVIE_1_PRICE,seats1);
+        MovieSession movieSession2 = new MovieSession(new ObjectId().toString(), timeslot2, cinema2, movie2,
+                house2, MOVIE_2_PRICE, seats2);
+        movieSessionRepository.saveAll(Arrays.asList(movieSession1, movieSession2));
+
     }
 }

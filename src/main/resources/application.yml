@@ -7,4 +7,5 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/movieverse
+      uri: mongodb+srv://tatp:tatp2022@cluster0.bokkijx.mongodb.net
+      database: movieverse2

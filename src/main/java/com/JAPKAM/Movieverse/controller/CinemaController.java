@@ -25,9 +25,5 @@ public class CinemaController {
         return cinemaService.findAll();
     }
 
-    @GetMapping("/{id}/movies")
-    public List<Movie> findMoviesByCinemaId(@PathVariable String id){
-        return cinemaService.findMoviesByCinemaId(id);
-    }
 
 }

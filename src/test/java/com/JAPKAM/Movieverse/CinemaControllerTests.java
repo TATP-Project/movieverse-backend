@@ -108,10 +108,8 @@ public class CinemaControllerTests {
         String district1 = DistrictName.KOWLOON.toString();
         String district2 = DistrictName.HONG_KONG.toString();
 
-        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movie1),district1);
-        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),
-                Arrays.asList(movie2),district2);
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1) ,district1);
+        Cinema cinema2 = new Cinema(new ObjectId().toString(), CINEMA_2_NAME, Arrays.asList(house2),district2);
         cinemaRepository.saveAll(Arrays.asList(cinema1, cinema2));
 
         //when
@@ -176,8 +174,7 @@ public class CinemaControllerTests {
 
         String district1 = DistrictName.KOWLOON.toString();
 
-        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),
-                Arrays.asList(movie1, movie2),district1);
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
         cinemaRepository.save(cinema1);
 
         client.perform(MockMvcRequestBuilders.get("/cinemas/{id}/movies", cinema1.getId()))

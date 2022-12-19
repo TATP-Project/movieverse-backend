@@ -23,3 +23,11 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jar {
+	classifier = ''
+	nabled = false
+	manifest {
+		attributes('Main-Class': 'com.rest.springbootemployee.SpringBootEmployeeApplication')
+	}
+}

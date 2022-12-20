@@ -9,6 +9,11 @@ import java.util.List;
 @Service
 public class FoodService {
     private FoodRepository foodRepository;
+
+    public FoodService(FoodRepository foodRepository) {
+        this.foodRepository = foodRepository;
+    }
+
     public List<Food> findAll() {
         return foodRepository.findAll();
     }

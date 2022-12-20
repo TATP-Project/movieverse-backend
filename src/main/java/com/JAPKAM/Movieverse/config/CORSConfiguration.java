@@ -15,7 +15,7 @@ public class CORSConfiguration {
 //                registry.addMapping("http://localhost:3000");
                 registry.addMapping("/**")
                         .allowedMethods("GET","POST","PUT","DELETE")
-                        .allowedOrigins("http://localhost:3000");
+                        .allowedOrigins("http://localhost:3000","https://movieverse-backend-staging.up.railway.app");
             }
         };
     }

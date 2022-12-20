@@ -62,4 +62,8 @@ public class MovieSessionService {
     public List<MovieSession> findByMovieId(String id){
         return movieSessionRepository.findByMovieId(id);
     }
+
+    public double getPriceByMovieSessionId(String id) {
+        return findById(id).getPrice();
+    }
 }

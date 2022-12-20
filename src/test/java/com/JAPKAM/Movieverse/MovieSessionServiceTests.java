@@ -98,54 +98,62 @@ public class MovieSessionServiceTests {
         verify(movieSessionRepository).findAll();
     }
 
-//    @Test
-//    void should_return_all_seats_when_get_seats_given_movie_session_id() throws Exception {
-//        //given
-//        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-//        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
-//
-//        List<Seat> seats1 = new ArrayList<>();
-//        seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
-//
-//        String id = new ObjectId().toString();
-//        MovieSession movieSession1 = new MovieSession(id, timeslot1,
-//                house1, MOVIE_1_PRICE, seats1);
-//
-//        when(movieSessionRepository.findById(id)).thenReturn(Optional.of(movieSession1));
-//        //when
-//
-//        List<Seat> returnedSeats = movieSessionService.findById(id).getSeats();
-//
-//        //then
-//        assertThat(seats1, equalTo(returnedSeats));
-//        verify(movieSessionRepository).findById(movieSession1.getId());
-//    }
-//    @Test
-//    void should_update_seat_status_when_update_given_movie_session() throws Exception {
-//        // given
-//        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-//        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
-//
-//        List<Seat> seats1 = new ArrayList<>();
-//        String seatId = new ObjectId().toString();
-//        seats1.add(new Seat(seatId, 1, 1, SeatStatus.AVAILABLE));
-//
-//        String id = new ObjectId().toString();
-//        MovieSession movieSession1 = new MovieSession(id, timeslot1,
-//                house1, MOVIE_1_PRICE, seats1);
-//        movieSessionRepository.save(movieSession1);
-//        Seat newSeat = new Seat(seatId, 2, 2, SeatStatus.RESERVED);
-//
-//        when(movieSessionRepository.findById(id)).thenReturn(Optional.of(movieSession1));
-//        // when
-//        Seat updatedSeat = movieSessionService.updateSeat(id,newSeat);
-//        // then
-//        verify(movieSessionRepository).findById(id);
-//        assertThat(updatedSeat.getRow(),equalTo(1));
-//        assertThat(updatedSeat.getColumn(),equalTo(1));
-//        assertThat(updatedSeat.getStatus(),equalTo(SeatStatus.RESERVED));
-//
-//    }
+    @Test
+    void should_return_all_seats_when_get_seats_given_movie_session_id() throws Exception {
+        //given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+        seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        String district1 = DistrictName.KOWLOON.toString();
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        MovieSession movieSession1 = new MovieSession(id, timeslot1,cinema1,movie1,
+                house1, MOVIE_1_PRICE, seats1);
+
+        when(movieSessionRepository.findById(id)).thenReturn(Optional.of(movieSession1));
+        //when
+
+        List<Seat> returnedSeats = movieSessionService.findById(id).getSeats();
+
+        //then
+        assertThat(seats1, equalTo(returnedSeats));
+        verify(movieSessionRepository).findById(movieSession1.getId());
+    }
+    @Test
+    void should_update_seat_status_when_update_given_movie_session() throws Exception {
+        // given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+        String seatId = new ObjectId().toString();
+        seats1.add(new Seat(seatId, 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        String district1 = DistrictName.KOWLOON.toString();
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        MovieSession movieSession1 = new MovieSession(id, timeslot1,cinema1,movie1,
+                house1, MOVIE_1_PRICE, seats1);
+        movieSessionRepository.save(movieSession1);
+        Seat newSeat = new Seat(seatId, 2, 2, SeatStatus.RESERVED);
+
+        when(movieSessionRepository.findById(id)).thenReturn(Optional.of(movieSession1));
+        // when
+        Seat updatedSeat = movieSessionService.updateSeat(id,newSeat);
+        // then
+        verify(movieSessionRepository).findById(id);
+        assertThat(updatedSeat.getRow(),equalTo(1));
+        assertThat(updatedSeat.getColumn(),equalTo(1));
+        assertThat(updatedSeat.getStatus(),equalTo(SeatStatus.RESERVED));
+
+    }
 
     @Test
     void should_return_updated_seats_status_to_sold_when_update_seat_status_given_2_sold_seats() {
@@ -172,7 +180,7 @@ public class MovieSessionServiceTests {
         MovieSession movieSession1 = new MovieSession(movieSessionId, timeslot1, cinema1, movie1, house1, MOVIE_1_PRICE, seats);
         when(movieSessionRepository.findById(movieSessionId)).thenReturn(Optional.of(movieSession1));
         //when
-        List<Seat> updatedSeats = movieSessionService.updateSeatStatusToSold(movieSessionId,soldSeats);
+        List<Seat> updatedSeats = movieSessionService.updateSeatStatus(movieSessionId,soldSeats);
         //then
         assertThat(updatedSeats, hasSize(2));
         assertThat(updatedSeats.get(0).getRow(),equalTo(1));

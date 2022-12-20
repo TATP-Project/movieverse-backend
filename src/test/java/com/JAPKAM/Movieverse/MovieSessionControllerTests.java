@@ -167,53 +167,62 @@ public class MovieSessionControllerTests {
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MovieSessionNotFoundException))
                 .andExpect(result -> assertEquals("Movie Session Not Found", result.getResolvedException().getMessage()));;
     }
-//    @Test
-//    void should_return_list_of_seats_when_perform_get_given_movie_session() throws Exception {
-//        // given
-//        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-//        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
-//
-//        List<Seat> seats1 = new ArrayList<>();
-//                seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
-//
-//        String id = new ObjectId().toString();
-//        MovieSession movieSession1 = new MovieSession(id, timeslot1,
-//                house1, MOVIE_1_PRICE, seats1);
-//        movieSessionRepository.save(movieSession1);
-//        // when
-//        client.perform(MockMvcRequestBuilders.get("/moviesessions/{id}/seats", id))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].row").value(1))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].column").value(1))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].status").value("AVAILABLE"));
-//        // then
-//
-//    }
-//    @Test
-//    void should_update_seat_when_perform_put_given_movie_session() throws Exception {
-//        // given
-//        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
-//        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
-//
-//        List<Seat> seats1 = new ArrayList<>();
-//        String seatId = new ObjectId().toString();
-//        seats1.add(new Seat(seatId, 1, 1, SeatStatus.AVAILABLE));
-//
-//        String id = new ObjectId().toString();
-//        MovieSession movieSession1 = new MovieSession(id, timeslot1,
-//                house1, MOVIE_1_PRICE, seats1);
-//        movieSessionRepository.save(movieSession1);
-//        Seat newSeat = new Seat(seatId, 2, 2, SeatStatus.RESERVED);
-//        String newSeatJson = new ObjectMapper().writeValueAsString(newSeat);
-//        // when & then
-//        client.perform(MockMvcRequestBuilders.put("/moviesessions/{id}/seats", id).contentType(MediaType.APPLICATION_JSON).content(newSeatJson))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.row").value(1))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.column").value(1))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("RESERVED"));
-//
-//    }
+    @Test
+    void should_return_list_of_seats_when_perform_get_given_movie_session() throws Exception {
+        // given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+                seats1.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        String district1 = DistrictName.KOWLOON.toString();
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        MovieSession movieSession1 = new MovieSession(id, timeslot1,cinema1,movie1,
+                house1, MOVIE_1_PRICE, seats1);
+        movieSessionRepository.save(movieSession1);
+        // when
+        client.perform(MockMvcRequestBuilders.get("/movie-sessions/{id}/seats", id))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].row").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].column").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].status").value("AVAILABLE"));
+        // then
+
+    }
+    @Test
+    void should_update_seats_when_perform_put_given_movie_session() throws Exception {
+        // given
+        List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
+        Timeslot timeslot1 = new Timeslot(new ObjectId().toString(), TIMESLOT_ONE);
+        House house1 = new House(new ObjectId().toString(), HOUSE_ONE, 1, 1);
+
+        List<Seat> seats1 = new ArrayList<>();
+        String seatId = new ObjectId().toString();
+        seats1.add(new Seat(seatId, 1, 1, SeatStatus.AVAILABLE));
+
+        String id = new ObjectId().toString();
+        String district1 = DistrictName.KOWLOON.toString();
+        Cinema cinema1 = new Cinema(new ObjectId().toString(), CINEMA_1_NAME, Arrays.asList(house1),district1);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        MovieSession movieSession1 = new MovieSession(id, timeslot1,cinema1,movie1,
+                house1, MOVIE_1_PRICE, seats1);
+        movieSessionRepository.save(movieSession1);
+        Seat newSeat1 = new Seat(seatId, 2, 2, SeatStatus.RESERVED);
+
+        String newSeatsJson = new ObjectMapper().writeValueAsString(Arrays.asList(newSeat1));
+        // when & then
+        client.perform(MockMvcRequestBuilders.put("/movie-sessions/{id}/seats", id).contentType(MediaType.APPLICATION_JSON).content(newSeatsJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].row").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].column").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].status").value("RESERVED"));
+
+    }
 
     @Test
     void should_return_movie_sessions_of_movie_when_find_movie_session_by_movie_id_given_movie_id() throws Exception {

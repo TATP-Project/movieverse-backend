@@ -172,7 +172,7 @@ public class MovieSessionServiceTests {
         MovieSession movieSession1 = new MovieSession(movieSessionId, timeslot1, cinema1, movie1, house1, MOVIE_1_PRICE, seats);
         when(movieSessionRepository.findById(movieSessionId)).thenReturn(Optional.of(movieSession1));
         //when
-        List<Seat> updatedSeats = movieSessionService.updateSeatStatusToSold(movieSessionId,soldSeats);
+        List<Seat> updatedSeats = movieSessionService.updateSeatStatus(movieSessionId,soldSeats);
         //then
         assertThat(updatedSeats, hasSize(2));
         assertThat(updatedSeats.get(0).getRow(),equalTo(1));

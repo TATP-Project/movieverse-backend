@@ -48,7 +48,7 @@ public class MovieSessionService {
     }
 
 
-    public List<Seat> updateSeatStatusToSold(String id, List<Seat> seats) {
+    public List<Seat> updateSeatStatus(String id, List<Seat> seats) {
         MovieSession currentMovieSession = movieSessionRepository.findById(id).orElseThrow(MovieSessionNotFoundException::new);
         List<Seat> oldSeats = currentMovieSession.getSeats();
         List <SeatStatus> statusList = oldSeats.stream().map(seat -> seat.getStatus()).collect(Collectors.toList());

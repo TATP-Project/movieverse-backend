@@ -228,7 +228,7 @@ public class MovieSessionServiceTests {
         verify(movieSessionRepository).findByMovieId(movie1.getId());
     }
     @Test
-    void should_return_price_when_get_price_given_movie_id_and_movie_session_id() {
+    void should_return_price_when_get_price_given_movie_session_id() {
         //given
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
 

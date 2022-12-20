@@ -18,6 +18,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class TicketServiceTest {
@@ -33,12 +34,13 @@ public class TicketServiceTest {
         String movieSessionId=new ObjectId().toString();
         List<Seat> seats = new ArrayList<>();
         seats.add(new Seat(new ObjectId().toString(), 1, 1, SeatStatus.AVAILABLE));
-        Ticket requestTicketWithMovieSessionAndSeats= new Ticket(null,movieSessionId,seats,null);
+        Ticket requestTicketWithMovieSessionAndSeats= new Ticket(ticketId,movieSessionId,seats,null);
 
         given(ticketRepository.save(requestTicketWithMovieSessionAndSeats)).willReturn(requestTicketWithMovieSessionAndSeats);
         //when
         String returnTicketId = ticketService.postTicket(requestTicketWithMovieSessionAndSeats);
         //then
         assertThat(returnTicketId, equalTo(ticketId));
+        verify(ticketRepository).save(requestTicketWithMovieSessionAndSeats);
     }
 }

@@ -49,13 +49,13 @@ public class MovieSessionService {
 
 
     public List<Seat> updateSeatStatus(String id, List<Seat> seats) {
-        MovieSession currentMovieSession = movieSessionRepository.findById(id).orElseThrow(MovieSessionNotFoundException::new);
-        List<Seat> oldSeats = currentMovieSession.getSeats();
-        List <SeatStatus> statusList = oldSeats.stream().map(seat -> seat.getStatus()).collect(Collectors.toList());
-        int availableCount = (int)statusList.stream().filter(status -> status == SeatStatus.AVAILABLE).count();
-        if (availableCount != seats.size()){
-            throw new UnavailableSeatException();
-        }
+//        MovieSession currentMovieSession = movieSessionRepository.findById(id).orElseThrow(MovieSessionNotFoundException::new);
+//        List<Seat> oldSeats = currentMovieSession.getSeats();
+//        List <SeatStatus> statusList = oldSeats.stream().map(seat -> seat.getStatus()).collect(Collectors.toList());
+//        int availableCount = (int)statusList.stream().filter(status -> status == SeatStatus.AVAILABLE).count();
+//        if (availableCount != seats.size()){
+//            throw new UnavailableSeatException();
+//        }
         return seats.stream().map(seat -> updateSeat(id, seat)).collect(Collectors.toList());
     }
 

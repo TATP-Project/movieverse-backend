@@ -38,7 +38,7 @@ public class MovieSessionController {
     }
 
     @PutMapping("/{id}/seats")
-    public List<Seat> updateSeat(@PathVariable String id, @RequestBody List<Seat> seats){
+    public List<Seat> updateSeats(@PathVariable String id, @RequestBody List<Seat> seats){
         return movieSessionService.updateSeatStatus(id, seats);
     }
 

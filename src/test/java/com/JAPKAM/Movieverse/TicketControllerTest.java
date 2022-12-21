@@ -118,7 +118,6 @@ public class TicketControllerTest {
         Seat selectedSeat = new Seat(new ObjectId().toString(), 1, 1, SeatStatus.SOLD);
         List<Seat> selectedSeats = Arrays.asList(selectedSeat);
         TicketCreateRequest ticketCreateRequest = new TicketCreateRequest();
-        ticketCreateRequest.setId(new ObjectId().toString());
         ticketCreateRequest.setMovieSessionId(movieSession1.getId());
         ticketCreateRequest.setSeats(selectedSeats);
         ticketCreateRequest.setFood(Arrays.asList(food.getId()));

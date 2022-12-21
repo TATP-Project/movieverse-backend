@@ -6,20 +6,11 @@ import com.JAPKAM.Movieverse.entity.Seat;
 import java.util.List;
 
 public class TicketCreateRequest {
-    private String id;
     private String movieSessionId;
     private List<Seat> seats;
     private List<String> food;
 
     public TicketCreateRequest() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getMovieSessionId() {

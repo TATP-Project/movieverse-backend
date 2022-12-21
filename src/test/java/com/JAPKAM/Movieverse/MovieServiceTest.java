@@ -47,10 +47,8 @@ public class MovieServiceTest {
         //given
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
         List<Tag> tags2 = Arrays.asList(new Tag(new ObjectId().toString(), ROMANTIC_TAG));
-        Binary image1 = new Binary(new byte[1]);
-        Binary image2 = new Binary(new byte[1]);
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,image1, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
-        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,image2, RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null, RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
 
         when(movieRepository.findAll()).thenReturn(Arrays.asList(movie1,movie2));
         //when
@@ -66,10 +64,8 @@ public class MovieServiceTest {
     void should_return_movie_when_find_by_id_given_movie() {
         //given
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
-
-        Binary image1 = new Binary(new byte[1]);
         String id = new ObjectId().toString();
-        Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,image1, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
+        Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
         given(movieRepository.findById(id)).willReturn(Optional.of(movie1));
         //when
         Movie result = movieService.findById(id);

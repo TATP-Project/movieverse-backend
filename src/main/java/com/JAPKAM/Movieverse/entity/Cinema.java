@@ -11,12 +11,8 @@ public class Cinema {
     private String id;
 
     private String name;
-
     @DBRef
     private List<House> houses;
-
-    @DBRef
-    private List<Movie> movies;
 
     private String district;
 
@@ -24,11 +20,10 @@ public class Cinema {
         return id;
     }
 
-    public Cinema(String id, String name, List<House> houses, List<Movie> movies, String district) {
+    public Cinema(String id, String name, List<House> houses, String district) {
         this.id = id;
         this.name = name;
         this.houses = houses;
-        this.movies = movies;
         this.district = district;
     }
 
@@ -50,14 +45,6 @@ public class Cinema {
 
     public void setHouses(List<House> houses) {
         this.houses = houses;
-    }
-
-    public List<Movie> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
     }
 
     public String getDistrict() {

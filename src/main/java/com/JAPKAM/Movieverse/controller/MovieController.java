@@ -1,6 +1,7 @@
 package com.JAPKAM.Movieverse.controller;
 
 import com.JAPKAM.Movieverse.entity.Movie;
+import com.JAPKAM.Movieverse.entity.MovieSession;
 import com.JAPKAM.Movieverse.service.MovieService;
 import com.mongodb.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,4 +30,5 @@ public class MovieController {
         Movie findMovie = movieService.findById(id);
         return movieService.findById(id);
     }
+
 }

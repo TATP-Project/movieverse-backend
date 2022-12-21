@@ -1,0 +1,7 @@
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://${MONGOUSER}:${MONGOPASSWORD}@${MONGOHOST}
+      database: ${DATABASE_NAME}
+

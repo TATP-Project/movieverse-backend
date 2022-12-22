@@ -2,5 +2,6 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://tatp:tatp2022@cluster0.bokkijx.mongodb.net
+      uri: mongodb://localhost:27017
+#      uri: mongodb+srv://tatp:tatp2022@cluster0.bokkijx.mongodb.net
       database: test

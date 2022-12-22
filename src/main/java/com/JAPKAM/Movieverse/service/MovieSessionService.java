@@ -54,7 +54,7 @@ public class MovieSessionService {
 
         for( Seat currentSeat: currentSeats ){
             for(Seat toUpdateSeat: seats){
-                if(currentSeat.getId().equals(toUpdateSeat.getId()) && currentSeat.getStatus().equals(SeatStatus.RESERVED)){
+                if(currentSeat.getId().equals(toUpdateSeat.getId()) && currentSeat.getStatus().equals(toUpdateSeat.getStatus())){
                     throw new UnavailableSeatException();
                 }
             }

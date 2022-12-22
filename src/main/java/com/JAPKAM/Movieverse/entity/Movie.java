@@ -13,15 +13,15 @@ public class Movie {
 
     private String name;
 
-    @DBRef
-    private List<Tag> tags;
-
     private Binary image;
 
     private GregorianCalendar releaseDate;
     private int runningTime;
     private Language language;
     private Language subtitle;
+
+    @DBRef
+    private List<Tag> tags;
 
     public Movie(String id, String name, List<Tag> tags, Binary image,
                  GregorianCalendar releaseDate, int runningTime, Language language, Language subtitle) {

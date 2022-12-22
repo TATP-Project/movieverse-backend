@@ -34,8 +34,6 @@ public class CommentServiceTests {
     public static final String MOVIE_ID_2 = new ObjectId().toString();
     public static final String ICON_LINK_2 = "ICON_LINK_2";
     public static final String CONTENT_2 = "CONTENT_2";
-    public static final String ICON_LINK_3 = "ICON_LINK_3";
-    public static final String CONTENT_3 = "CONTENT_3";
 
     @Test
     void should_return_comments_of_the_movie__when_find_by_movieId_given_comments_and_movie_id() {
@@ -58,7 +56,6 @@ public class CommentServiceTests {
     @Test
     void should_return_created_comment_when_create_comment_given_comment() {
         //given
-        String movieId = MOVIE_ID_1;
         Comment comment1 = new Comment(MOVIE_ID_1, ICON_LINK_1, CONTENT_1);
         when(commentRepository.save(comment1)).thenReturn(comment1);
         //when

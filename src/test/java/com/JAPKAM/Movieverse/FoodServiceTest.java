@@ -39,10 +39,8 @@ public class FoodServiceTest {
     @Test
     void should_return_all_food_when_find_all_given_a_list_of_food() {
         //given
-        Binary image1 = new Binary(new byte[1]);
-        Binary image2 = new Binary(new byte[1]);
-        Food food1 = new Food(new ObjectId().toString(), FOOD_1, PRICE1,image1, HOTDOG);
-        Food food2 = new Food(new ObjectId().toString(), FOOD_2, PRICE2,image2, DRINK);
+        Food food1 = new Food(new ObjectId().toString(), FOOD_1, PRICE1,null, HOTDOG);
+        Food food2 = new Food(new ObjectId().toString(), FOOD_2, PRICE2,null, DRINK);
         List<Food> foods = new ArrayList<>(Arrays.asList(food1, food2));
         given(foodRepository.findAll()).willReturn(foods);
 
@@ -58,8 +56,7 @@ public class FoodServiceTest {
     void should_return_food_when_find_by_id_given_food() {
         //given
         String id = new ObjectId().toString();
-        Binary image = new Binary(new byte[1]);
-        Food food = new Food(id, FOOD_1, PRICE1,image, HOTDOG);
+        Food food = new Food(id, FOOD_1, PRICE1,null, HOTDOG);
         given(foodRepository.findById(id)).willReturn(Optional.of(food));
         //when
         Food result = foodService.findById(id);

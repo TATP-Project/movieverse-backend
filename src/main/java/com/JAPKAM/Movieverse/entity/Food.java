@@ -16,11 +16,11 @@ public class Food {
 
     private Double price;
 
-    private Binary image;
+    private String image;
 
 
 
-    public Food(String id, String name, Double price, Binary image, String type) {
+    public Food(String id, String name, Double price, String image, String type) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -52,11 +52,11 @@ public class Food {
         this.price = price;
     }
 
-    public Binary getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Binary image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

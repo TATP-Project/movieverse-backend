@@ -35,10 +35,8 @@ public class FoodControllerTest {
     @Test
     void should_return_all_foods_when_find_all_given_foods() throws Exception {
         //given
-        Binary image1 = new Binary(new byte[1]);
-        Binary image2 = new Binary(new byte[1]);
-        Food food1 = new Food(new ObjectId().toString(), FOOD_NAME_1, PRICE1,image1, HOTDOG);
-        Food food2 = new Food(new ObjectId().toString(), FOOD_NAME_2, PRICE2,image2, DRINK);
+        Food food1 = new Food(new ObjectId().toString(), FOOD_NAME_1, PRICE1,null, HOTDOG);
+        Food food2 = new Food(new ObjectId().toString(), FOOD_NAME_2, PRICE2,null, DRINK);
         foodRepository.save(food1);
         foodRepository.save(food2);
         //when

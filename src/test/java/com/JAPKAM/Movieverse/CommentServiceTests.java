@@ -54,4 +54,17 @@ public class CommentServiceTests {
         assertThat(comments.get(1), equalTo(comment2));
         verify(commentRepository).findByMovieId(movieId);
     }
+
+    @Test
+    void should_return_created_comment_when_create_comment_given_comment() {
+        //given
+        String movieId = MOVIE_ID_1;
+        Comment comment1 = new Comment(MOVIE_ID_1, ICON_LINK_1, CONTENT_1);
+        when(commentRepository.save(comment1)).thenReturn(comment1);
+        //when
+        Comment createdComment = commentService.createComment(comment1);
+        //then
+        assertThat(createdComment, equalTo(comment1));
+        verify(commentRepository).save(comment1);
+    }
 }

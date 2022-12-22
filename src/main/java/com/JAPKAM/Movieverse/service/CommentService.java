@@ -18,4 +18,8 @@ public class CommentService {
     public List<Comment> findByMovieId(String movieId) {
         return commentRepository.findByMovieId(movieId);
     }
+
+    public Comment createComment(Comment comment) {
+        return commentRepository.save(comment);
+    }
 }

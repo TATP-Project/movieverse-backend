@@ -54,10 +54,9 @@ public class MovieControllerTest {
         //given
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
         List<Tag> tags2 = Arrays.asList(new Tag(new ObjectId().toString(), ROMANTIC_TAG));
-        Binary image1 = new Binary(new byte[1]);
-        Binary image2 = new Binary(new byte[1]);
-        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,image1, RELEASE_DATE1,RUNNING_TIME1, Language.ENGLISH,Language.CHINESE);
-        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,image2, RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
+
+        Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,null, RELEASE_DATE1,RUNNING_TIME1, Language.ENGLISH,Language.CHINESE);
+        Movie movie2 = new Movie(new ObjectId().toString(), MOVIE_2_NAME, tags2,null, RELEASE_DATE2,RUNNING_TIME2,Language.CHINESE,Language.CHINESE);
         movieRepository.save(movie1);
         movieRepository.save(movie2);
         //when & then
@@ -84,10 +83,8 @@ public class MovieControllerTest {
                 seats1.add(new Seat(new ObjectId().toString(), i+1, j+1, SeatStatus.AVAILABLE));
             }
         }
-
-        Binary image1 = new Binary(new byte[1]);
         String id = new ObjectId().toString();
-        Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,image1, RELEASE_DATE1,
+        Movie movie1 = new Movie(id, MOVIE_1_NAME, tags1,null, RELEASE_DATE1,
                 RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
         movieRepository.save(movie1);
         //when & then

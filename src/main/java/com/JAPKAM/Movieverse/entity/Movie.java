@@ -13,17 +13,17 @@ public class Movie {
 
     private String name;
 
-    private Binary image;
+    @DBRef
+    private List<Tag> tags;
+
+    private String image;
 
     private GregorianCalendar releaseDate;
     private int runningTime;
     private Language language;
     private Language subtitle;
 
-    @DBRef
-    private List<Tag> tags;
-
-    public Movie(String id, String name, List<Tag> tags, Binary image,
+    public Movie(String id, String name, List<Tag> tags, String image,
                  GregorianCalendar releaseDate, int runningTime, Language language, Language subtitle) {
         this.id = id;
         this.name = name;
@@ -59,11 +59,11 @@ public class Movie {
         this.tags = tags;
     }
 
-    public Binary getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Binary image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

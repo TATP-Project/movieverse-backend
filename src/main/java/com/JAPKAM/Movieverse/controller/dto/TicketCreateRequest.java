@@ -1,6 +1,5 @@
 package com.JAPKAM.Movieverse.controller.dto;
 
-import com.JAPKAM.Movieverse.entity.Food;
 import com.JAPKAM.Movieverse.entity.Seat;
 
 import java.util.List;

@@ -8,13 +8,18 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 public class Comment {
     @MongoId(FieldType.OBJECT_ID)
     private String id;
+    private String movieId;
     private String iconLink;
     private String content;
 
-    public Comment(String id, String iconLink, String content) {
-        this.id = id;
+    public Comment(String movieId, String iconLink, String content) {
+        this.movieId = movieId;
         this.iconLink = iconLink;
         this.content = content;
+    }
+
+    public Comment() {
+
     }
 
     public String getId() {
@@ -39,5 +44,13 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
     }
 }

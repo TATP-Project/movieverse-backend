@@ -79,7 +79,7 @@ public class CinemaServiceTests {
 
         List<Tag> tags1 = Arrays.asList(new Tag(new ObjectId().toString(), ACTION_TAG));
         House house1 = new House(new ObjectId().toString(), HOUSE_ONE, HOUSE_ONE_ROW_NUMBER, HOUSE_ONE_COL_NUMBER);
-        Binary image1 = new Binary(new byte[1]);
+        String image1 = "";
         Movie movie1 = new Movie(new ObjectId().toString(), MOVIE_1_NAME, tags1,image1, RELEASE_DATE1,RUNNING_TIME1,Language.ENGLISH,Language.CHINESE);
 
         String district1 = DistrictName.KOWLOON.toString();

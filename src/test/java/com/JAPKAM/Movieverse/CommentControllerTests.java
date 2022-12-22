@@ -5,6 +5,7 @@ import com.JAPKAM.Movieverse.entity.Comment;
 import com.JAPKAM.Movieverse.repository.CommentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,6 +29,11 @@ public class CommentControllerTests {
 
     @Autowired
     CommentRepository commentRepository;
+
+    @BeforeEach
+    public void clearDB(){
+        commentRepository.deleteAll();
+    }
 
     public static final String MOVIE_ID_1 = new ObjectId().toString();
     public static final String ICON_LINK_1 = "ICON_LINK_1";

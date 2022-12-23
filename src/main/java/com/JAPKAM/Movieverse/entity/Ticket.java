@@ -24,6 +24,10 @@ public class Ticket {
         this.foods = foods;
     }
 
+    public Ticket() {
+
+    }
+
     public String getId() {
         return id;
     }

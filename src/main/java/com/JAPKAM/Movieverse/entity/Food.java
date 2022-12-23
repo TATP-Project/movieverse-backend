@@ -12,15 +12,20 @@ public class Food {
 
     private String name;
 
+    private String type;
+
     private Double price;
 
     private Binary image;
 
-    public Food(String id, String name, Double price, Binary image) {
+
+
+    public Food(String id, String name, Double price, Binary image, String type) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.image = image;
+        this.type = type;
     }
 
     public String getId() {
@@ -53,5 +58,13 @@ public class Food {
 
     public void setImage(Binary image) {
         this.image = image;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
